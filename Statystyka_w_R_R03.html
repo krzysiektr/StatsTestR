@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Krzysztof Trajkowski" />
+
+
+<title>Rozdział 3</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Statystyka w R
+  </a>
+</li>
+<li>
+  <a href="Statystyka_w_R_R01.html">Wprowadzenie do testowania</a>
+</li>
+<li>
+  <a href="Statystyka_w_R_R02.html">Metody klasyczne / odporne</a>
+</li>
+<li>
+  <a href="Statystyka_w_R_R03.html">Metody oparte na rangach</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Rozdział 3</h1>
+<h4 class="author"><em>Krzysztof Trajkowski</em></h4>
+<h4 class="date"><em>24 września, 2018</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#metody-oparte-na-rangach">Metody oparte na rangach</a><ul>
+<li><a href="#zmienne-niezalezne">Zmienne niezależne</a><ul>
+<li><a href="#test-sumy-rang-wilcoxona">Test sumy rang Wilcoxona</a></li>
+<li><a href="#test-kruskala-wallisa">Test Kruskala-Wallisa</a></li>
+<li><a href="#testy-post-hoc">Testy post hoc</a></li>
+<li><a href="#uwagi-koncowe">Uwagi końcowe</a></li>
+</ul></li>
+<li><a href="#zmienne-zalezne">Zmienne zależne</a><ul>
+<li><a href="#test-rangowanych-znakow-wilcoxona">Test rangowanych znaków Wilcoxona</a></li>
+<li><a href="#test-friedmana">Test Friedmana</a></li>
+<li><a href="#testy-post-hoc-1">Testy post hoc</a></li>
+<li><a href="#uwagi-koncowe-1">Uwagi końcowe</a></li>
+</ul></li>
+<li><a href="#co-dalej">Co dalej</a></li>
+</ul></li>
+<li><a href="#references">References</a></li>
+</ul>
+</div>
+
+<div id="metody-oparte-na-rangach" class="section level1">
+<h1>Metody oparte na rangach</h1>
+<div id="zmienne-niezalezne" class="section level2">
+<h2>Zmienne niezależne</h2>
+<div id="test-sumy-rang-wilcoxona" class="section level3">
+<h3>Test sumy rang Wilcoxona</h3>
+<p>Przy założeniu, że dwa badane rozkłady mają ten sam kształt (takie same wariancje, skośność itp.) można zweryfikować jedną z wybranych hipotez statystycznych:</p>
+<ol style="list-style-type: decimal">
+<li>Hipoteza zerowa dla parametru przesunięcia: <span class="math display">\[H_{0}:\;F(x)=G(y+\Delta)\]</span> która określa przesunięcie dystrybuanty <span class="math inline">\(G(y)\)</span> o wielkość <span class="math inline">\(\Delta\)</span> względem dystrybuanty <span class="math inline">\(F(x)\)</span> <span class="citation">(Divine et al. <a href="#ref-med2018">2018</a>)</span>. Inaczej mówiąc rozmieszczenie rozkładów <span class="math inline">\(F(x)\)</span> i <span class="math inline">\(G(y)\)</span> różni się w zależności od <span class="math inline">\(\Delta\)</span>. Parametr przesunięcia można oszacować za pomocą estymatorora Hodgesa-Lehmanna: <span class="math display">\[\hat{\Delta}=\textrm{median}\{x_i-y_j:\;i=1,\;...n_1;\;j=1,\;...n_2\}\]</span></li>
+</ol>
+<pre class="r"><code>set.seed(2305); x &lt;- rpois(20,2); y &lt;- rpois(20,1)</code></pre>
+<pre class="r"><code>median(outer(x, y, &quot;-&quot;))</code></pre>
+<pre><code>## [1] 1</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Hipoteza zerowa dla równości stochastycznej: <span class="math display">\[H_{0}:\;p= 0,5\]</span> która określa prawdopodobieństwo tego, że obserwacje w grupie pierwszej <span class="math inline">\(x\)</span> są zazwyczaj mniejsze niż w grupie drugiej <span class="math inline">\(y\)</span>. Zakładamy, że jest ono równe <span class="math inline">\(0,5\)</span>. Wynika z tego, że prawdopodobieństwo zdarzenia przeciwnego (obserwacje w grupie pierwszej <span class="math inline">\(x\)</span> są zazwyczaj większe niż w grupie drugiej <span class="math inline">\(y\)</span>) jest także równe <span class="math inline">\(0,5\)</span>. Zatem w hipotezie zerowej zakładamy, że wartości w obu próbkach mają porównywalne wartości tzn. wartości z pierwszej próbki nie mają tendencji do mniejszych/większych wartości niż w próbce drugiej. Estymację tego prawdopodobieństwa można dokonać w dwojaki sposób: <span class="math display">\[\hat{p}=P(x&lt;y)+0,5\cdot P(x=y)\]</span></li>
+</ol>
+<pre class="r"><code>mean(outer(x, y, &quot;&lt;&quot;))+ 0.5*mean(outer(x, y, &quot;==&quot;))</code></pre>
+<pre><code>## [1] 0.28625</code></pre>
+<p>lub z wykorzystaniem formuły: <span class="math display">\[\hat{p}=\frac{\bar{r}_2-(n_2+1)\cdot 0,5}{n_1}\]</span> gdzie: <span class="math inline">\(\bar{r}_2\)</span> to średnia ranga dla drugiej zmiennej a rangi są liczone na podstawie próbki zbiorczej.</p>
+<pre class="r"><code>r &lt;- rank(c(x,y))
+(mean(r[21:40])-21*0.5)/20</code></pre>
+<pre><code>## [1] 0.28625</code></pre>
+<p>Na podstawie estymatora prawdopodobieństwa <span class="math inline">\(\hat{p}\)</span> można obliczyć statystykę testu sumy rang Wilcoxona: <span class="math display">\[
+W= (1-\hat{p})n_1n_2
+\]</span></p>
+<pre class="r"><code>(mean(outer(x, y, &quot;&gt;&quot;))+ 0.5*mean(outer(x, y, &quot;==&quot;)))*length(x)*length(y)</code></pre>
+<pre><code>## [1] 285.5</code></pre>
+<p>a następnie wyznaczyć dokładną p-wartość na podstawie wszystkich możliwych kombinacji:</p>
+<pre class="r"><code>choose(length(x)+length(y), length(x))</code></pre>
+<pre><code>## [1] 137846528820</code></pre>
+<p>Dokładny rozkład sumy rang Wilcoxona można znaleźć w tablicach statystycznych lub wygenerować za pomocą funkcji <a href="https://www.rdocumentation.org/packages/stats/versions/3.5.0/topics/Wilcoxon"><code>pwilcox</code></a>. To rozwiązanie nie uwzględnienia rang wiązanych i jest zimplementowane w funkcji <a href="https://www.rdocumentation.org/packages/stats/versions/3.5.0/topics/wilcox.test"><code>wilcox.test</code></a>. Domyślnie funkcja <a href="https://www.rdocumentation.org/packages/stats/versions/3.5.0/topics/wilcox.test"><code>wilcox.test</code></a> oblicza dokładną p-wartość ale jeśli liczebność próbek jest większa niż <span class="math inline">\(50\)</span> lub występują rangi wiązane to jest obliczana przybliżona p-wartość z wykorzystaniem rozkładu normalnego z korektą na ciągłość (domyślnie) lub bez korekty: <span class="math display">\[
+Z=\frac{|W-E(W)|-0,5}{\sqrt{V(W)}}\quad\textrm{lub}\quad Z=\frac{W-E(W)}{\sqrt{V(W)}}
+\]</span> gdzie: <span class="math inline">\(E(W)=\frac{n_1n_2}{2}\)</span> to średnia, <span class="math inline">\(V(W)=\frac{n_1n_2(n_1+n_2+1)}{12}\)</span> to wariancja, <span class="math inline">\(0,5\)</span> to poprawka na ciągłość.</p>
+<p>Za pomocą funkcji <a href="https://www.rdocumentation.org/packages/coin/versions/1.2-2/topics/LocationTests"><code>wilcox_test</code></a> można również wykonać test permutacyjny ale z użyciem Shift Algorithm który uwzględnia rangi wiązane <span class="citation">(T. Hothorn and Hornik <a href="#ref-perm2002">2002</a>)</span>. Jest on dostępny w R dzięki funkcji <a href="https://www.rdocumentation.org/packages/exactRankTests/versions/0.8-28/topics/dperm"><code>pperm</code></a>.<br />
+Warto pamiętać, że wraz ze wzrostem liczebności próbek rośnie również liczba kombinacji a co za tym idzie mogą się pojawiać problemy obliczeniowe. W takim przypadku warto zastosować symulację czyli losowanie z góry ustalonej liczby kombinacji np. <span class="math inline">\(10000\)</span>. Warto podkreślić, że symulacje można przeprowadzić z wykorzystaniem wybranej liczby rdzeni procesora aby przyspieszyć obliczenia.</p>
+<pre class="r"><code>d &lt;- data.frame(y= c(x,y), g= factor(rep(1:2,each=length(x))))
+coin::wilcox_test(y~ g, conf.int= TRUE, data= d,
+                  distribution= &quot;exact&quot;)</code></pre>
+<pre><code>## 
+##  Exact Wilcoxon-Mann-Whitney Test
+## 
+## data:  y by g (1, 2)
+## Z = 2.3743, p-value = 0.01742
+## alternative hypothesis: true mu is not equal to 0
+## 95 percent confidence interval:
+##  0 2
+## sample estimates:
+## difference in location 
+##                      1</code></pre>
+<pre class="r"><code>coin::wilcox_test(y~ g, conf.int= TRUE, data= d,
+                  distribution= coin::approximate(B= 10000, parallel= &quot;multicore&quot;, ncpus= 4))</code></pre>
+<pre><code>## 
+##  Approximative Wilcoxon-Mann-Whitney Test
+## 
+## data:  y by g (1, 2)
+## Z = 2.3743, p-value = 0.0183
+## alternative hypothesis: true mu is not equal to 0
+## 95 percent confidence interval:
+##  0 2
+## sample estimates:
+## difference in location 
+##                      1</code></pre>
+<p>Dodajmy jeszcze, że funkcja <a href="https://www.rdocumentation.org/packages/coin/versions/1.2-2/topics/LocationTests"><code>wilcox_test</code></a> domyślnie stosuje aproksymację rozkładem normalnym z uwzględnieniem rang wiązanych: <span class="math display">\[Z=\frac{W-E(W)}{\sqrt{V(W)-\frac{n_1n_2\sum_{i=1}^{c}(t_i^3-t_i)}{12(n_1+n_2)(n_1+n_2-1)}}}\]</span> gdzie: <span class="math inline">\(E(W)=\frac{n_1n_2}{2}\)</span> to średnia, <span class="math inline">\(V(W)=\frac{n_1n_2(n_1+n_2+1)}{12}\)</span> to wariancja, <span class="math inline">\(t_i\)</span> to liczba obserwacji posiadających tę samą rangę.</p>
+<pre class="r"><code>coin::wilcox_test(y~ g, data= d, conf.int= TRUE)</code></pre>
+<pre><code>## 
+##  Asymptotic Wilcoxon-Mann-Whitney Test
+## 
+## data:  y by g (1, 2)
+## Z = 2.3743, p-value = 0.01758
+## alternative hypothesis: true mu is not equal to 0
+## 95 percent confidence interval:
+##  1.419942e-05 1.999980e+00
+## sample estimates:
+## difference in location 
+##               1.000071</code></pre>
+</div>
+<div id="test-kruskala-wallisa" class="section level3">
+<h3>Test Kruskala-Wallisa</h3>
+<p>Ta metoda jest rozwinięciem testu sumy rang Wilcoxona na więcej niż dwa poziomy zmiennej grupującej. Oznacza to, że dla dwóch zmiennych niezależnych (jedna zmienna grupująca z dwoma poziomami) wyniki testu Kruskal-Wallisa będą takie same jak w teście sumy rang Wilcoxona.</p>
+<pre class="r"><code>coin::pvalue(coin::wilcox_test(y~ g, distribution= &quot;exact&quot;, data= d))</code></pre>
+<pre><code>## [1] 0.01741943</code></pre>
+<pre class="r"><code>coin::pvalue(coin::kruskal_test(y~ g, distribution= &quot;exact&quot;, data= d))</code></pre>
+<pre><code>## [1] 0.01741943</code></pre>
+<pre class="r"><code>set.seed(2305)
+d3 &lt;- data.frame(y= c(rnorm(20),rnorm(10,1,3)),
+                 g= factor(rep(1:3,each=10)), b= factor(rep(1:10,3)))</code></pre>
+<pre class="r"><code>coin::kruskal_test(y~ g, data= d3)</code></pre>
+<pre><code>## 
+##  Asymptotic Kruskal-Wallis Test
+## 
+## data:  y by g (1, 2, 3)
+## chi-squared = 7.9458, df = 2, p-value = 0.01882</code></pre>
+</div>
+<div id="testy-post-hoc" class="section level3">
+<h3>Testy post hoc</h3>
+<p>W literaturze można spotkać wiele propozycji testów do wielokrotnych porównań. Po odrzuceniu hipotezy zerowej często jest przeprowadzana seria testów sumy rang Wilcoxona z poprawką na wielokrotne porównania – <a href="https://www.rdocumentation.org/packages/stats/versions/3.5.0/topics/pairwise.wilcox.test"><code>pairwise.wilcox.test</code></a>. Inne popularne rozwiązanie to test Dunna który porównuje wszystkie poziomy zmiennej grupującej między sobą lub wybrany poziom z wszystkimi pozostałymi poziomami.</p>
+<pre class="r"><code>PMCMRplus::kruskalTest(y~ g, data= d3)</code></pre>
+<pre><code>## 
+##  Kruskal-Wallis test
+## 
+## data:  y by g
+## chi-squared = 7.9458, df = 2, p-value = 0.01882</code></pre>
+<pre class="r"><code>summary(PMCMRplus::kwAllPairsDunnTest(y~ g, p.adjust.method= &quot;hochberg&quot;, data= d3))</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using Dunn&#39;s all-pairs test</code></pre>
+<pre><code>##            z value Pr(&gt;|z|)  
+## 2 - 1 == 0   0.711 0.476960  
+## 3 - 1 == 0   2.007 0.089584 .
+## 3 - 2 == 0   2.718 0.019715 *</code></pre>
+<pre class="r"><code>summary(PMCMRplus::kwManyOneDunnTest(y~ g, p.adjust.method= &quot;hochberg&quot;, data= d3))</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using Dunn&#39;s many-to-one test</code></pre>
+<pre><code>##            z value Pr(&gt;|z|)  
+## 2 - 1 == 0  -0.711 0.476960  
+## 3 - 1 == 0   2.007 0.089584 .</code></pre>
+</div>
+<div id="uwagi-koncowe" class="section level3">
+<h3>Uwagi końcowe</h3>
+<ol style="list-style-type: decimal">
+<li>Dokładny rozkład statystyki Kruskala-Wallisa można przybliżać za pomocą dystrybuant: chi-kwadrat, F-Snedecora lub beta <span class="citation">(Meyer and Seaman <a href="#ref-kw2013">2013</a>)</span>. Procedura Conovera-Imama (wykorzystuje rozkład F-Snedecora) polega na porangowaniu danych i zastosowaniu klasycznej metody ANOVA.</li>
+</ol>
+<pre class="r"><code>PMCMRplus::kruskalTest(y~ g, data= d3, dist= &quot;FDist&quot;)</code></pre>
+<pre><code>## 
+##  Kruskal-Wallis test
+## 
+## data:  y by g
+## Conover&#39;s F = 5.0949, num df = 2, denom df = 27, p-value = 0.01326</code></pre>
+<pre class="r"><code>anova(aov(rank(y)~g,data=d3))</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: rank(y)
+##           Df Sum Sq Mean Sq F value  Pr(&gt;F)  
+## g          2  615.8 307.900  5.0949 0.01326 *
+## Residuals 27 1631.7  60.433                  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Test Andersona-Darlinga z reguły jest przedstawiany jako metoda do weryfikacji rozkładu zmiennej pod kątem wybranej dystrybuanty np. rozkład normalny. Jednak może być stosowany jako zamiennik testu Kruskala-Wallisa do badania hipotezy dotyczącej równości dystrybuant. Dodatkowo po odrzuceniu hipotezy zerowej mogą być stosowane testy post hoc.</li>
+</ol>
+<pre class="r"><code>PMCMRplus::adKSampleTest(y~ g, data= d3)</code></pre>
+<pre><code>## 
+##  Anderson-Darling k-sample test
+## 
+## data:  y by g
+## TkN = 3.0708, m = 2, p-value = 0.01482
+## sample estimates:
+##      A2kN    sigmaN 
+## 5.0566623 0.9953863</code></pre>
+<pre class="r"><code>summary(PMCMRplus::adAllPairsTest(y~ g, data= d3, p.adjust=&quot;hochberg&quot;))</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using Anderson-Darling Two-Sample Test</code></pre>
+<pre><code>## data: y by g</code></pre>
+<pre><code>## alternative hypothesis: two.sided</code></pre>
+<pre><code>## P value adjustment method: hochberg</code></pre>
+<pre><code>## H0</code></pre>
+<pre><code>##            T2N value Pr(&gt;|T2N|)  
+## 2 - 1 == 0    -0.310   0.507332  
+## 3 - 1 == 0     2.838   0.045537 *
+## 3 - 2 == 0     3.558   0.036376 *</code></pre>
+<pre><code>## ---</code></pre>
+<pre><code>## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+</div>
+<div id="zmienne-zalezne" class="section level2">
+<h2>Zmienne zależne</h2>
+<div id="test-rangowanych-znakow-wilcoxona" class="section level3">
+<h3>Test rangowanych znaków Wilcoxona</h3>
+<p>Statystykę testu dla rangowanych znaków Wilcoxona można obliczyć z uwzględnieniem zerowych różnic (metoda Pratta) lub z ich pominięciem (metoda Wilcoxona). W pierwszym przypadku wyznaczamy rangi na podstawie wartości bezwzględnych różnic. Z kolei dla metody Wilcoxona też wyznaczamy rangi na podstawie wartości bezwzględnych różnic ale po wcześniejszym usunięciu różnic równych zero.</p>
+<p><span class="math display">\[V^{+}_{W}=\sum_{d_i&gt;0}\textrm{rank}|d_i|\quad\textrm{lub}\quad V^{-}_{P}=\sum_{d_i&lt;0}\textrm{rank}|d_i|\]</span> gdzie: <span class="math inline">\(V^{+}_{W}\)</span> to statystyka testu dla metody Wilcoxona, <span class="math inline">\(V^{-}_{P}\)</span> to statystyka testu dla metody Pratta.</p>
+<p>Dla małych próbek <span class="math inline">\(n&lt;50\)</span> funkcja <a href="https://www.rdocumentation.org/packages/stats/versions/3.5.0/topics/wilcox.test"><code>wilcox.test</code></a> domyślnie oblicza dokładną p-wartość z wykorzystaniem dystrybuanty <a href="https://www.rdocumentation.org/packages/stats/versions/3.5.0/topics/SignRank"><code>psignrank</code></a>. Należy podkreślić, że funkcja <a href="https://www.rdocumentation.org/packages/stats/versions/3.5.0/topics/wilcox.test"><code>wilcox.test</code></a> nie wyznaczy dokładnej p-wartości gdy w danych występują rangi wiązane lub wartości zerowe dla różnic. P-wartość zostanie wtedy przybliżona za pomocą rozkładu normalnego z korektą na ciągłość (domyślnie) lub bez korekty.</p>
+<p><span class="math display">\[Z_{\textrm{W}}=\frac{\big[V_{W}^{+}-\frac{1}{4}n(n+1)\big]-0,5}{\sqrt{\frac{1}{24}n(n+1)(2n+1)}}\]</span></p>
+<p>W przypadku funkcji <a href="https://www.rdocumentation.org/packages/coin/versions/1.2-2/topics/LocationTests"><code>wilcox_test</code></a> która uwzględnia rangi wiązane możemy zdecydować którą metodę wybrać: Pratta (domyślna) czy Wilcoxona. <span class="math display">\[Z_{\textrm{W}}=\frac{V_{W}^{+}-\frac{1}{4}n(n+1)}{\sqrt{\frac{1}{24}\big[n(n+1)(2n+1)\big]-\frac{1}{48}\sum_{i=1}^{c}(t^3_i-t_i)}}\]</span></p>
+<p><span class="math display">\[Z_{\textrm{P}}=\frac{V_{P}^{-}-\frac{1}{4}\big[n(n+1)-t_0(t_0+1)\big]}{\sqrt{\frac{1}{24}\big[n(n+1)(2n+1)-t_0(t_0+1)(2t_0+1)\big]-\frac{1}{48}\sum_{i=1}^{c}(t^3_i-t_i)}}\]</span> gdzie: <span class="math inline">\(n\)</span> to liczba par, <span class="math inline">\(V_{W}^{+}\)</span> to statystyka testu dla metody Wilcoxona, <span class="math inline">\(V_{P}^{-}\)</span> to statystyka testu dla metody Pratta, <span class="math inline">\(t_0\)</span> to ilość zerowych różnic, <span class="math inline">\(c\)</span> to liczba grup pomiarów wiązanych, <span class="math inline">\(t_i\)</span> to liczba pomiarów wiązanych w <span class="math inline">\(i-\textrm{tej}\)</span> grupie pomiarów wiązanych.</p>
+<pre class="r"><code>coin::wilcoxsign_test(extra~ group|ID, data= sleep, distribution= &quot;exact&quot;)</code></pre>
+<pre><code>## 
+##  Exact Wilcoxon-Pratt Signed-Rank Test
+## 
+## data:  y by x (pos, neg) 
+##   stratified by block
+## Z = -2.7575, p-value = 0.003906
+## alternative hypothesis: true mu is not equal to 0</code></pre>
+</div>
+<div id="test-friedmana" class="section level3">
+<h3>Test Friedmana</h3>
+<p>Test Friedmana jest rozszerzeniem testu znaków na więcej niż dwa poziomy zmiennej grupującej. Natomiast test rangowanych znaków Wilcoxona (metoda Pratta) można uogólnić za pomocą testu Quade. Przypomnijmy, że omawiane testy mają zastosowanie dla grup zależnych.</p>
+<pre class="r"><code>coin::pvalue(coin::sign_test(extra~ group|ID, data= sleep, distribution= &quot;exact&quot;))</code></pre>
+<pre><code>## [1] 0.00390625</code></pre>
+<pre class="r"><code>coin::friedman_test(extra~ group|ID, data= sleep, distribution= &quot;exact&quot;)</code></pre>
+<pre><code>## 
+##  Exact Friedman Test
+## 
+## data:  extra by group (1, 2) 
+##   stratified by ID
+## chi-squared = 9, p-value = 0.003906</code></pre>
+<pre class="r"><code>coin::pvalue(coin::wilcoxsign_test(extra~ group|ID, data= sleep, distribution= &quot;exact&quot;))</code></pre>
+<pre><code>## [1] 0.00390625</code></pre>
+<pre class="r"><code>coin::quade_test(extra~ group|ID, data= sleep, distribution= &quot;exact&quot;)</code></pre>
+<pre><code>## 
+##  Exact Quade Test
+## 
+## data:  extra by group (1, 2) 
+##   stratified by ID
+## chi-squared = 7.6037, p-value = 0.003906</code></pre>
+</div>
+<div id="testy-post-hoc-1" class="section level3">
+<h3>Testy post hoc</h3>
+<p>Po odrzuceniu hipotezy zerowej dla testu Friedmana lub Quade można przeprowadzić serię testów (testy znaków lub rangowane testy znaków) z odpowiednią poprawką na porównania wielokrotne. Jednak z pośród wielu testów post-hoc dostępnych dla metody Friedmana bardzo popularnym rozwiązaniem jest test Nemenyi.</p>
+<pre class="r"><code>with(PMCMRplus::friedmanTest(y,g,b),data=d3)</code></pre>
+<pre><code>## 
+##  Friedman rank sum test
+## 
+## data:  y , g and b
+## Friedman chi-squared = 8.6, df = 2, p-value = 0.01357</code></pre>
+<pre class="r"><code>with(PMCMRplus::frdAllPairsNemenyiTest(y,g,b),data=d3)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using Nemenyi-Wilcoxon-Wilcox all-pairs test for a two-way balanced complete block design</code></pre>
+<pre><code>##   1    2   
+## 2 0.26 -   
+## 3 0.17 0.97</code></pre>
+</div>
+<div id="uwagi-koncowe-1" class="section level3">
+<h3>Uwagi końcowe</h3>
+<ol style="list-style-type: decimal">
+<li>Test Friedmana z wykorzystaniem statystyki chi-kwadrat to bardzo popularne rozwiązanie ale nie jedyne <span class="citation">(García et al. <a href="#ref-fred2010">2010</a>)</span>. Procedura Imana-Davenporta (wykorzystuje rozkład F-Snedecora) polega na porangowaniu danych i zastosowaniu klasycznej metody ANOVA dla pomiarów powtarzanych.</li>
+</ol>
+<pre class="r"><code>u &lt;- unstack(d3[,1:2])
+scmamp::imanDavenportTest(u)</code></pre>
+<pre><code>## 
+##  Iman Davenport&#39;s correction of Friedman&#39;s rank sum test
+## 
+## data:  u
+## Corrected Friedman&#39;s chi-squared = 6.7895, df1 = 2, df2 = 18,
+## p-value = 0.006351</code></pre>
+<pre class="r"><code>d3$r &lt;- rank(as.vector(t(apply(u,1,rank))))
+summary(aov(r ~ g + Error(b), data = d3))</code></pre>
+<pre><code>## 
+## Error: b
+##           Df    Sum Sq  Mean Sq F value Pr(&gt;F)
+## Residuals  9 8.685e-29 9.65e-30               
+## 
+## Error: Within
+##           Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+## g          2    860   430.0   6.789 0.00635 **
+## Residuals 18   1140    63.3                   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Metoda wyrównania rang jest procedurą trochę bardziej złożoną. Poniżej przykład tego rozwiązania oraz test post hoc.</li>
+</ol>
+<pre class="r"><code>scmamp::friedmanAlignedRanksTest(u)</code></pre>
+<pre><code>## 
+##  Friedman&#39;s Aligned Rank Test for Multiple Comparisons
+## 
+## data:  u
+## T = 8.6617, df = 2, p-value = 0.01316</code></pre>
+<pre class="r"><code>scmamp::postHocTest(data= u, test= &quot;aligned ranks&quot;, correct= &quot;bergmann&quot;)$corrected.pval</code></pre>
+<pre><code>##            X1          X2          X3
+## X1         NA 0.387807190 0.013747185
+## X2 0.38780719          NA 0.002629782
+## X3 0.01374719 0.002629782          NA</code></pre>
+</div>
+</div>
+<div id="co-dalej" class="section level2">
+<h2>Co dalej</h2>
+<p>Przedstawione powyżej rozwiązania dla rang nie są jedynymi metodami. Przykładowo, jeśli dla dwóch zmiennych niezależnych chcemy zweryfikować hipotezę zerową dotyczącą równości stochastycznej: <span class="math inline">\(H_{0}^{p}:p=0,5\)</span> można zastosować test Brunnera-Munzela <span class="citation">(E. Brunner and Munzel <a href="#ref-bm2000">2000</a>)</span>. Jest to dobra alternatywna dla testu sumy rang Wilcoxona w warunakch heteroskedastyczności. Można skorzystać także z wersji permutacyjnej <span class="citation">(Neubert and Brunner <a href="#ref-nb2006">2006</a>)</span> oraz z przedziałów ufności <span class="citation">(M. Pauly, Asendorf, and Konietschke <a href="#ref-npar2016">2016</a>)</span> dla parametru <span class="math inline">\(p\)</span>. Metody symulacyjne są zalecane dla małych próbek lub w sytuacji występowania rang wiązanych. Dostępny jest również dokładny test <span class="citation">(E. Brunner and Munzel <a href="#ref-bm2002">2002</a>)</span> oraz jego odpowiednik permutacyny <span class="citation">(F. Konietschke and Pauly <a href="#ref-bmperm2012">2012</a>)</span> dla dwóch zmiennych zależnych jako alternatywa testu rangowanych znaków Wilcoxona. W programie R jest dostępny pakiet <strong>nparcomp</strong> <span class="citation">(F. Konietschke et al. <a href="#ref-nparcomp2015">2015</a>)</span> w którym oprócz powyżej wymienionych metod uwzględniono także ich uogólnienia. Jednak mogą one być traktowane jako odporne na heteroskedastyczność analogi np. testu Kruskala-Wallisa, Quade czy Friedmana. Wynika to z tego, że uwzględniają tylko jedną zmienną grupującą – niezależną lub zależną. Dla bardziej złożonych schematów badawczych są opracowane nieparametryczne metody ANOVA-type-statistic i Wald-type-statistic z wykorzystaniem odpowiednio rozkladu <span class="math inline">\(F\)</span> i <span class="math inline">\(\chi^2\)</span>. Są one zimplementowane w pakiecie <strong>rankFD</strong> <span class="citation">(E. Brunner et al. <a href="#ref-rankFD2016">2016</a>)</span> dla danych niezależnych oraz w pakiecie <strong>nparLD</strong> <span class="citation">(Noguchi et al. <a href="#ref-nparld2012">2012</a>)</span> dla danych z pomiarami powtarzanymi. Ciekawym uzupełnieniem powyższych rozwiązań opartych na rangach jest wyrównana transformacja rang <span class="citation">(Wobbrock et al. <a href="#ref-art2011">2011</a>)</span> która została wdrożona do R w ramach pakietu <strong>ARTool</strong> <span class="citation">(Kay and Wobbrock <a href="#ref-artool2016">2016</a>)</span>. Warto zaznaczyć, że po transformacji danych jest stosowany model liniowy - <code>stats::lm</code> lub liniowy model mieszany - <code>lme4::lmer</code> <span class="citation">(Biecek <a href="#ref-Biecek2018">2018</a>)</span> w zależności od przyjętego schematu badawczego.</p>
+<pre class="r"><code>m.art &lt;- ARTool::art(y ~g +(1|b), data =d3)
+anova(m.art)</code></pre>
+<pre><code>## Analysis of Variance of Aligned Rank Transformed Data
+## 
+## Table Type: Analysis of Deviance Table (Type III Wald F tests with Kenward-Roger df) 
+## Model: Mixed Effects (lmer)
+## Response: art(y)
+## 
+##          F Df Df.res   Pr(&gt;F)  
+## 1 g 5.0949  2     18 0.017645 *
+## ---
+## Signif. codes:   0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code>m1 &lt;- multcomp::glht(ARTool::artlm(m.art ,&quot;g&quot;), linfct =multcomp::mcp(g =&quot;Tukey&quot;))
+summary(m1 ,test =multcomp::adjusted(&quot;Westfall&quot;))</code></pre>
+<pre><code>## 
+##   Simultaneous Tests for General Linear Hypotheses
+## 
+## Multiple Comparisons of Means: Tukey Contrasts
+## 
+## 
+## Fit: lmer(formula = .y ~ g + (1 | b), data = df)
+## 
+## Linear Hypotheses:
+##            Estimate Std. Error z value Pr(&gt;|z|)   
+## 2 - 1 == 0   -2.800      3.477  -0.805  0.42060   
+## 3 - 1 == 0    7.900      3.477   2.272  0.02307 * 
+## 3 - 2 == 0   10.700      3.477   3.078  0.00591 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## (Adjusted p values reported -- Westfall method)</code></pre>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-Biecek2018">
+<p>Biecek, P. 2018. <em>Analiza danych z programem R. Modele liniowe z efektami stałymi, losowymi i mieszanymi</em>. PWN. <a href="http://www.biecek.pl/R/#Analiza%20danych%20z%20programem%20R">http://www.biecek.pl/R/#Analiza%20danych%20z%20programem%20R</a>.</p>
+</div>
+<div id="ref-bm2000">
+<p>Brunner, E., and U. Munzel. 2000. “The Nonparametric Behrens‐Fisher Problem: Asymptotic Theory and a Small‐Sample Approximation.” <em>Biometrical Journal</em> 42 (1): 17–25. <a href="https://doi.org/10.1002/(SICI)1521-4036(200001)42:1&lt;17::AID-BIMJ17&gt;3.0.CO;2-U" class="uri">https://doi.org/10.1002/(SICI)1521-4036(200001)42:1&lt;17::AID-BIMJ17&gt;3.0.CO;2-U</a>.</p>
+</div>
+<div id="ref-bm2002">
+<p>———. 2002. “An Exact Paired Rank Test.” <em>Biometrical Journal</em> 44 (5): 584–93. <a href="https://doi.org/10.1002/1521-4036(200207)44:5&lt;584::AID-BIMJ584&gt;3.0.CO;2-9" class="uri">https://doi.org/10.1002/1521-4036(200207)44:5&lt;584::AID-BIMJ584&gt;3.0.CO;2-9</a>.</p>
+</div>
+<div id="ref-rankFD2016">
+<p>Brunner, E., F. Konietschke, M. Pauly, and M. L. Puri. 2016. “Rank‐based Procedures in Factorial Designs: Hypotheses About Non‐parametric Treatment Effects.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 79 (5): 1463–85. <a href="https://doi.org/10.1111/rssb.12222" class="uri">https://doi.org/10.1111/rssb.12222</a>.</p>
+</div>
+<div id="ref-med2018">
+<p>Divine, George W., H. James Norton, Anna E. Barón, and Elizabeth Juarez-Colunga. 2018. “The Wilcoxon–Mann–Whitney Procedure Fails as a Test of Medians.” <em>The American Statistician</em> 0 (0). Taylor &amp; Francis: 1–9. <a href=" https://doi.org/10.1080/00031305.2017.1305291">https://doi.org/10.1080/00031305.2017.1305291</a>.</p>
+</div>
+<div id="ref-fred2010">
+<p>García, Salvador, Alberto Fernández, Julián Luengo, and Francisco Herrera. 2010. “Advanced Nonparametric Tests for Multiple Comparisons in the Design of Experiments in Computational Intelligence and Data Mining: Experimental Analysis of Power.” <em>Inf. Sci.</em> 180 (10). New York, NY, USA: Elsevier Science Inc.: 2044–64. <a href="http://dx.doi.org/10.1016/j.ins.2009.12.010" class="uri">http://dx.doi.org/10.1016/j.ins.2009.12.010</a>.</p>
+</div>
+<div id="ref-perm2002">
+<p>Hothorn, Torsten, and Kurt Hornik. 2002. “Exact Nonparametric Inference in R.” In <em>Compstat</em>, edited by Wolfgang Härdle and Bernd Rönz, 355–60. Heidelberg: Physica-Verlag HD. <a href="https://link.springer.com/chapter/10.1007/978-3-642-57489-4_52" class="uri">https://link.springer.com/chapter/10.1007/978-3-642-57489-4_52</a>.</p>
+</div>
+<div id="ref-artool2016">
+<p>Kay, Matthew, and Jacob O. Wobbrock. 2016. <em>ARTool: Aligned Rank Transform for Nonparametric Factorial Anovas</em>. <a href="https://github.com/mjskay/ARTool" class="uri">https://github.com/mjskay/ARTool</a>.</p>
+</div>
+<div id="ref-bmperm2012">
+<p>Konietschke, Frank, and Markus Pauly. 2012. “A Studentized Permutation Test for the Nonparametric Behrens-Fisher Problem in Paired Data.” <em>Electron. J. Statist.</em> 6. The Institute of Mathematical Statistics; the Bernoulli Society: 1358–72. <a href="https://doi.org/10.1214/12-EJS714" class="uri">https://doi.org/10.1214/12-EJS714</a>.</p>
+</div>
+<div id="ref-nparcomp2015">
+<p>Konietschke, Frank, Marius Placzek, Frank Schaarschmidt, and Ludwig A. Hothorn. 2015. “nparcomp: An R Software Package for Nonparametric Multiple Comparisons and Simultaneous Confidence Intervals.” <em>Journal of Statistical Software</em> 64 (9): 1–17. <a href="http://www.jstatsoft.org/v64/i09/" class="uri">http://www.jstatsoft.org/v64/i09/</a>.</p>
+</div>
+<div id="ref-kw2013">
+<p>Meyer, J. Patrick, and Michael A. Seaman. 2013. “A Comparison of the Exact Kruskal-Wallis Distribution to Asymptotic Approximations for All Sample Sizes up to 105.” <em>The Journal of Experimental Education</em> 81 (2). Routledge: 139–56. <a href="https://doi.org/10.1080/00220973.2012.699904" class="uri">https://doi.org/10.1080/00220973.2012.699904</a>.</p>
+</div>
+<div id="ref-nb2006">
+<p>Neubert, K., and E. Brunner. 2006. “Das Nichtparametrische Behrens-Fisher-Problem: Ein Studentisierter Permutationstest Und Robuste Konfidenzintervalle Für Den Shift-Effekt.” <a href="https://ediss.uni-goettingen.de/handle/11858/00-1735-0000-000D-F21D-C" class="uri">https://ediss.uni-goettingen.de/handle/11858/00-1735-0000-000D-F21D-C</a>.</p>
+</div>
+<div id="ref-nparld2012">
+<p>Noguchi, Kimihiro, Yulia R. Gel, Edgar Brunner, and Frank Konietschke. 2012. “nparLD: An R Software Package for the Nonparametric Analysis of Longitudinal Data in Factorial Experiments.” <em>Journal of Statistical Software</em> 50 (12): 1–23. <a href="http://www.jstatsoft.org/v50/i12/" class="uri">http://www.jstatsoft.org/v50/i12/</a>.</p>
+</div>
+<div id="ref-npar2016">
+<p>Pauly, M., T. Asendorf, and F. Konietschke. 2016. “Permutation‐based Inference for the Auc: A Unified Approach for Continuous and Discontinuous Data.” <em>Biometrical Journal</em> 58 (6): 1319–37. <a href="https://doi.org/10.1002/bimj.201500105" class="uri">https://doi.org/10.1002/bimj.201500105</a>.</p>
+</div>
+<div id="ref-art2011">
+<p>Wobbrock, Jacob O., Leah Findlater, Darren Gergle, and James J. Higgins. 2011. “The Aligned Rank Transform for Nonparametric Factorial Analyses Using Only Anova Procedures.” In <em>Proceedings of the Acm Conference on Human Factors in Computing Systems (Chi ’11)</em>, 143–46. New York: ACM Press. <a href="http://depts.washington.edu/aimgroup/proj/art/" class="uri">http://depts.washington.edu/aimgroup/proj/art/</a>.</p>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

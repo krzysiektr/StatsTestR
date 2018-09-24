@@ -1,0 +1,217 @@
+---
+title: "Rozdział 3"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+author: Krzysztof Trajkowski
+bibliography: bibliography.bib
+output:
+  html_document:
+    citation_package: natbib
+    toc: true
+link-citations: true
+---
+
+# Metody oparte na rangach
+
+## Zmienne niezależne
+
+### Test sumy rang Wilcoxona
+
+Przy założeniu, że dwa badane rozkłady mają ten sam kształt (takie same wariancje, skośność itp.) można zweryfikować jedną z wybranych hipotez statystycznych:
+
+(1) Hipoteza zerowa dla parametru przesunięcia:
+$$H_{0}:\;F(x)=G(y+\Delta)$$
+która określa przesunięcie dystrybuanty $G(y)$ o wielkość $\Delta$ względem dystrybuanty $F(x)$ [@med2018]. Inaczej mówiąc rozmieszczenie rozkładów $F(x)$ i $G(y)$ różni się w zależności od $\Delta$. Parametr przesunięcia można oszacować za pomocą estymatorora Hodgesa-Lehmanna:
+$$\hat{\Delta}=\textrm{median}\{x_i-y_j:\;i=1,\;...n_1;\;j=1,\;...n_2\}$$
+```{r}
+set.seed(2305); x <- rpois(20,2); y <- rpois(20,1)
+```
+```{r}
+median(outer(x, y, "-"))
+```
+
+(2) Hipoteza zerowa dla równości stochastycznej:
+$$H_{0}:\;p= 0,5$$
+która określa prawdopodobieństwo tego, że obserwacje w grupie pierwszej $x$ są zazwyczaj mniejsze niż w grupie drugiej $y$. Zakładamy, że jest ono równe $0,5$. Wynika z tego, że prawdopodobieństwo zdarzenia przeciwnego (obserwacje w grupie pierwszej $x$ są zazwyczaj większe niż w grupie drugiej $y$) jest także równe $0,5$. Zatem w hipotezie zerowej zakładamy, że wartości w obu próbkach mają porównywalne wartości tzn. wartości z pierwszej próbki nie mają tendencji do mniejszych/większych wartości niż w próbce drugiej. Estymację tego prawdopodobieństwa można dokonać w dwojaki sposób:
+$$\hat{p}=P(x<y)+0,5\cdot P(x=y)$$
+```{r}
+mean(outer(x, y, "<"))+ 0.5*mean(outer(x, y, "=="))
+```
+lub z wykorzystaniem formuły:
+$$\hat{p}=\frac{\bar{r}_2-(n_2+1)\cdot 0,5}{n_1}$$
+gdzie: $\bar{r}_2$ to średnia ranga dla drugiej zmiennej a rangi są liczone na podstawie próbki zbiorczej.
+```{r}
+r <- rank(c(x,y))
+(mean(r[21:40])-21*0.5)/20
+```
+
+Na podstawie estymatora prawdopodobieństwa $\hat{p}$ można obliczyć statystykę testu sumy rang Wilcoxona:
+$$
+W= (1-\hat{p})n_1n_2
+$$
+
+```{r}
+(mean(outer(x, y, ">"))+ 0.5*mean(outer(x, y, "==")))*length(x)*length(y)
+```
+a następnie wyznaczyć dokładną p-wartość na podstawie wszystkich możliwych kombinacji:
+```{r}
+choose(length(x)+length(y), length(x))
+```
+Dokładny rozkład sumy rang Wilcoxona można znaleźć w tablicach statystycznych lub wygenerować za pomocą funkcji [`pwilcox`](https://www.rdocumentation.org/packages/stats/versions/3.5.0/topics/Wilcoxon).
+To rozwiązanie nie uwzględnienia rang wiązanych i jest zimplementowane w funkcji [`wilcox.test`](https://www.rdocumentation.org/packages/stats/versions/3.5.0/topics/wilcox.test). Domyślnie funkcja [`wilcox.test`](https://www.rdocumentation.org/packages/stats/versions/3.5.0/topics/wilcox.test) oblicza dokładną p-wartość ale
+jeśli liczebność próbek jest większa niż $50$ lub występują rangi wiązane to jest obliczana przybliżona p-wartość z wykorzystaniem rozkładu normalnego z korektą na ciągłość (domyślnie) lub bez korekty:
+$$
+Z=\frac{|W-E(W)|-0,5}{\sqrt{V(W)}}\quad\textrm{lub}\quad Z=\frac{W-E(W)}{\sqrt{V(W)}}
+$$
+gdzie: $E(W)=\frac{n_1n_2}{2}$ to średnia, $V(W)=\frac{n_1n_2(n_1+n_2+1)}{12}$ to wariancja, $0,5$ to poprawka na ciągłość.
+
+Za pomocą funkcji [`wilcox_test`](https://www.rdocumentation.org/packages/coin/versions/1.2-2/topics/LocationTests) można również wykonać test permutacyjny ale z użyciem Shift Algorithm który uwzględnia rangi wiązane [@perm2002]. Jest on dostępny w R  dzięki funkcji [`pperm`](https://www.rdocumentation.org/packages/exactRankTests/versions/0.8-28/topics/dperm).  
+Warto pamiętać, że wraz ze wzrostem liczebności próbek rośnie również liczba kombinacji a co za tym idzie mogą się pojawiać problemy obliczeniowe. W takim przypadku warto zastosować symulację czyli losowanie z góry ustalonej liczby kombinacji np. $10000$. Warto podkreślić, że symulacje można przeprowadzić z wykorzystaniem wybranej liczby rdzeni procesora aby przyspieszyć obliczenia.
+```{r}
+d <- data.frame(y= c(x,y), g= factor(rep(1:2,each=length(x))))
+coin::wilcox_test(y~ g, conf.int= TRUE, data= d,
+                  distribution= "exact")
+coin::wilcox_test(y~ g, conf.int= TRUE, data= d,
+                  distribution= coin::approximate(B= 10000, parallel= "multicore", ncpus= 4))
+```
+
+Dodajmy jeszcze, że funkcja [`wilcox_test`](https://www.rdocumentation.org/packages/coin/versions/1.2-2/topics/LocationTests) domyślnie stosuje aproksymację rozkładem normalnym z uwzględnieniem rang wiązanych:
+$$Z=\frac{W-E(W)}{\sqrt{V(W)-\frac{n_1n_2\sum_{i=1}^{c}(t_i^3-t_i)}{12(n_1+n_2)(n_1+n_2-1)}}}$$
+gdzie: $E(W)=\frac{n_1n_2}{2}$ to średnia, $V(W)=\frac{n_1n_2(n_1+n_2+1)}{12}$ to wariancja, $t_i$ to liczba obserwacji posiadających tę samą rangę.
+```{r}
+coin::wilcox_test(y~ g, data= d, conf.int= TRUE)
+```
+
+### Test Kruskala-Wallisa
+
+Ta metoda jest rozwinięciem testu sumy rang Wilcoxona na więcej niż dwa poziomy zmiennej grupującej. Oznacza to, że dla dwóch zmiennych niezależnych (jedna zmienna grupująca z dwoma poziomami) wyniki testu Kruskal-Wallisa będą takie same jak w teście sumy rang Wilcoxona.
+
+```{r}
+coin::pvalue(coin::wilcox_test(y~ g, distribution= "exact", data= d))
+coin::pvalue(coin::kruskal_test(y~ g, distribution= "exact", data= d))
+```
+
+```{r}
+set.seed(2305)
+d3 <- data.frame(y= c(rnorm(20),rnorm(10,1,3)),
+                 g= factor(rep(1:3,each=10)), b= factor(rep(1:10,3)))
+```
+```{r}
+coin::kruskal_test(y~ g, data= d3)
+```
+
+### Testy post hoc
+
+W literaturze można spotkać wiele propozycji testów do wielokrotnych porównań.
+Po odrzuceniu hipotezy zerowej często jest przeprowadzana seria testów sumy rang Wilcoxona z poprawką na wielokrotne porównania -- [`pairwise.wilcox.test`](https://www.rdocumentation.org/packages/stats/versions/3.5.0/topics/pairwise.wilcox.test). Inne popularne rozwiązanie to test Dunna który porównuje wszystkie poziomy zmiennej grupującej między sobą lub wybrany poziom z wszystkimi pozostałymi poziomami.
+
+```{r}
+PMCMRplus::kruskalTest(y~ g, data= d3)
+```
+```{r warning=FALSE,message=1}
+summary(PMCMRplus::kwAllPairsDunnTest(y~ g, p.adjust.method= "hochberg", data= d3))
+```
+```{r warning=FALSE,message=1}
+summary(PMCMRplus::kwManyOneDunnTest(y~ g, p.adjust.method= "hochberg", data= d3))
+```
+
+### Uwagi końcowe
+
+(1) Dokładny rozkład statystyki Kruskala-Wallisa można przybliżać za pomocą dystrybuant: chi-kwadrat, F-Snedecora lub beta [@kw2013]. Procedura Conovera-Imama (wykorzystuje rozkład F-Snedecora) polega na porangowaniu danych i zastosowaniu klasycznej metody ANOVA.
+```{r}
+PMCMRplus::kruskalTest(y~ g, data= d3, dist= "FDist")
+anova(aov(rank(y)~g,data=d3))
+```
+
+(2) Test Andersona-Darlinga z reguły jest przedstawiany jako metoda do weryfikacji rozkładu zmiennej pod kątem wybranej dystrybuanty np. rozkład normalny. Jednak może być stosowany jako zamiennik testu Kruskala-Wallisa do badania hipotezy dotyczącej równości dystrybuant. Dodatkowo po odrzuceniu hipotezy zerowej mogą być stosowane testy post hoc.
+```{r}
+PMCMRplus::adKSampleTest(y~ g, data= d3)
+summary(PMCMRplus::adAllPairsTest(y~ g, data= d3, p.adjust="hochberg"))
+```
+
+## Zmienne zależne
+
+### Test rangowanych znaków Wilcoxona
+
+Statystykę testu dla rangowanych znaków Wilcoxona można obliczyć z uwzględnieniem zerowych różnic (metoda Pratta) lub z ich pominięciem (metoda Wilcoxona). W pierwszym przypadku wyznaczamy rangi na podstawie wartości bezwzględnych różnic. Z kolei dla metody Wilcoxona też wyznaczamy rangi na podstawie wartości bezwzględnych różnic ale po wcześniejszym usunięciu różnic równych zero.
+
+$$V^{+}_{W}=\sum_{d_i>0}\textrm{rank}|d_i|\quad\textrm{lub}\quad V^{-}_{P}=\sum_{d_i<0}\textrm{rank}|d_i|$$
+gdzie: $V^{+}_{W}$ to statystyka testu dla metody Wilcoxona, $V^{-}_{P}$ to statystyka testu dla metody Pratta.
+
+Dla małych próbek $n<50$ funkcja [`wilcox.test`](https://www.rdocumentation.org/packages/stats/versions/3.5.0/topics/wilcox.test) domyślnie oblicza dokładną p-wartość z wykorzystaniem dystrybuanty [`psignrank`](https://www.rdocumentation.org/packages/stats/versions/3.5.0/topics/SignRank). Należy podkreślić, że funkcja [`wilcox.test`](https://www.rdocumentation.org/packages/stats/versions/3.5.0/topics/wilcox.test) nie wyznaczy dokładnej p-wartości gdy w danych występują rangi wiązane lub wartości zerowe dla różnic. P-wartość zostanie wtedy przybliżona za pomocą rozkładu normalnego z korektą na ciągłość (domyślnie) lub bez korekty.
+
+$$Z_{\textrm{W}}=\frac{\big[V_{W}^{+}-\frac{1}{4}n(n+1)\big]-0,5}{\sqrt{\frac{1}{24}n(n+1)(2n+1)}}$$
+
+W przypadku funkcji [`wilcox_test`](https://www.rdocumentation.org/packages/coin/versions/1.2-2/topics/LocationTests) która uwzględnia rangi wiązane możemy zdecydować którą metodę wybrać: Pratta (domyślna) czy Wilcoxona.
+$$Z_{\textrm{W}}=\frac{V_{W}^{+}-\frac{1}{4}n(n+1)}{\sqrt{\frac{1}{24}\big[n(n+1)(2n+1)\big]-\frac{1}{48}\sum_{i=1}^{c}(t^3_i-t_i)}}$$
+
+$$Z_{\textrm{P}}=\frac{V_{P}^{-}-\frac{1}{4}\big[n(n+1)-t_0(t_0+1)\big]}{\sqrt{\frac{1}{24}\big[n(n+1)(2n+1)-t_0(t_0+1)(2t_0+1)\big]-\frac{1}{48}\sum_{i=1}^{c}(t^3_i-t_i)}}$$
+gdzie: $n$ to liczba par, $V_{W}^{+}$ to statystyka testu dla metody Wilcoxona, $V_{P}^{-}$ to statystyka testu dla metody Pratta, $t_0$ to ilość zerowych różnic, $c$ to liczba grup pomiarów wiązanych, $t_i$ to liczba pomiarów wiązanych w $i-\textrm{tej}$ grupie pomiarów wiązanych.
+
+```{r}
+coin::wilcoxsign_test(extra~ group|ID, data= sleep, distribution= "exact")
+```
+
+### Test Friedmana
+
+Test Friedmana jest rozszerzeniem testu znaków na więcej niż dwa poziomy zmiennej grupującej. Natomiast test rangowanych znaków Wilcoxona (metoda Pratta) można uogólnić za pomocą testu Quade. Przypomnijmy, że omawiane testy mają zastosowanie dla grup zależnych.
+```{r}
+coin::pvalue(coin::sign_test(extra~ group|ID, data= sleep, distribution= "exact"))
+coin::friedman_test(extra~ group|ID, data= sleep, distribution= "exact")
+```
+
+```{r}
+coin::pvalue(coin::wilcoxsign_test(extra~ group|ID, data= sleep, distribution= "exact"))
+coin::quade_test(extra~ group|ID, data= sleep, distribution= "exact")
+```
+
+### Testy post hoc
+
+Po odrzuceniu hipotezy zerowej dla testu Friedmana lub Quade można przeprowadzić serię testów (testy znaków lub rangowane testy znaków) z odpowiednią poprawką na porównania wielokrotne. Jednak z pośród wielu testów post-hoc dostępnych dla metody Friedmana bardzo popularnym rozwiązaniem jest test Nemenyi.
+```{r}
+with(PMCMRplus::friedmanTest(y,g,b),data=d3)
+```
+```{r warning=FALSE,message=1}
+with(PMCMRplus::frdAllPairsNemenyiTest(y,g,b),data=d3)
+```
+
+### Uwagi końcowe
+
+(1) Test Friedmana z wykorzystaniem statystyki chi-kwadrat to bardzo popularne rozwiązanie ale nie jedyne [@fred2010]. Procedura Imana-Davenporta (wykorzystuje rozkład
+F-Snedecora) polega na porangowaniu danych i zastosowaniu klasycznej metody ANOVA dla pomiarów powtarzanych.
+
+```{r}
+u <- unstack(d3[,1:2])
+scmamp::imanDavenportTest(u)
+```
+```{r}
+d3$r <- rank(as.vector(t(apply(u,1,rank))))
+summary(aov(r ~ g + Error(b), data = d3))
+```
+
+(2) Metoda wyrównania rang jest procedurą trochę bardziej złożoną. Poniżej przykład tego rozwiązania oraz test post hoc.
+
+```{r}
+scmamp::friedmanAlignedRanksTest(u)
+```
+
+```{r}
+scmamp::postHocTest(data= u, test= "aligned ranks", correct= "bergmann")$corrected.pval
+```
+
+## Co dalej
+
+Przedstawione powyżej rozwiązania dla rang nie są jedynymi metodami. Przykładowo, jeśli dla dwóch zmiennych niezależnych chcemy
+zweryfikować hipotezę zerową dotyczącą równości stochastycznej: $H_{0}^{p}:p=0,5$ można zastosować test Brunnera-Munzela [@bm2000]. Jest to dobra alternatywna dla testu sumy rang Wilcoxona w warunakch heteroskedastyczności. Można skorzystać także z wersji permutacyjnej [@nb2006] oraz z przedziałów ufności [@npar2016] dla parametru $p$. Metody symulacyjne są zalecane dla małych próbek lub w sytuacji występowania rang wiązanych. Dostępny jest również
+dokładny test [@bm2002] oraz jego odpowiednik permutacyny [@bmperm2012] dla dwóch zmiennych zależnych jako alternatywa testu rangowanych znaków Wilcoxona.
+W programie R jest dostępny pakiet **nparcomp** [@nparcomp2015] w którym oprócz powyżej wymienionych metod uwzględniono także ich uogólnienia. Jednak mogą one być  traktowane jako odporne na heteroskedastyczność analogi np. testu Kruskala-Wallisa, Quade czy Friedmana. Wynika to z tego, że uwzględniają tylko jedną zmienną grupującą -- niezależną lub zależną. Dla bardziej złożonych schematów badawczych są opracowane nieparametryczne metody ANOVA-type-statistic i Wald-type-statistic z wykorzystaniem odpowiednio rozkladu $F$ i $\chi^2$. Są one zimplementowane w pakiecie **rankFD** [@rankFD2016] dla danych niezależnych oraz w pakiecie **nparLD** [@nparld2012] dla danych z pomiarami powtarzanymi. Ciekawym uzupełnieniem powyższych rozwiązań opartych na rangach jest wyrównana transformacja rang [@art2011]
+która została wdrożona do R w ramach pakietu **ARTool** [@artool2016]. Warto zaznaczyć, że po transformacji danych jest stosowany model liniowy - `stats::lm` lub liniowy model mieszany - `lme4::lmer` [@Biecek2018] w zależności od przyjętego schematu badawczego.
+```{r}
+m.art <- ARTool::art(y ~g +(1|b), data =d3)
+anova(m.art)
+```
+```{r}
+m1 <- multcomp::glht(ARTool::artlm(m.art ,"g"), linfct =multcomp::mcp(g ="Tukey"))
+summary(m1 ,test =multcomp::adjusted("Westfall"))
+```
+
+# References {-}

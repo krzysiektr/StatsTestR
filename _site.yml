@@ -1,0 +1,16 @@
+name: "KTR"
+output_dir: "."
+navbar:
+  left:
+    - text: "Statystyka w R"
+      icon: fa-home
+      href: index.html
+    - text: "Wprowadzenie do testowania"
+      href: Statystyka_w_R_R01.html
+    - text: "Metody klasyczne / odporne"
+      href: Statystyka_w_R_R02.html
+    - text: "Metody oparte na rangach"
+      href: Statystyka_w_R_R03.html
+output:
+  html_document:
+    theme: flatly

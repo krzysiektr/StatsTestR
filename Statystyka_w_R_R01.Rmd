@@ -1,0 +1,266 @@
+---
+title: "Rozdział 1"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+author: Krzysztof Trajkowski
+bibliography: bibliography.bib
+output:
+  html_document:
+    citation_package: natbib
+    toc: true
+link-citations: true
+---
+
+# Wprowadzenie do testowania {#part_1}
+
+## Weryfikacja hipotezy statystycznej {#part_11}
+
+Estymator nieznanego parametru $\theta$ jest zmienną losową ponieważ z $m$ niezależnych losowań próbek otrzymamy $m$ różnych wartości estymatorów tzn. $\hat{\theta}_1,\,\hat{\theta}_2,\,...,\,\hat{\theta}_m$.
+Jeśli dysponujemy dużą próbą (często przyjmuje się, że $n$>30) to rozkład badanego estymatora można aproksymować rozkładem normalnym $N(\hat{\theta},SE_{\hat{\theta}})$.
+Estymator $\hat{\theta}$ i jego błąd standardowy $SE_{\hat{\theta}}$ można wyznaczyć za pomocą wielu funkcji dostępnych w R:
+
+* średnia: $\; \hat{\mu}=\sum_{i=1}^{n}x_i/n$ $\;\longrightarrow\quad$ [`mean`](https://www.rdocumentation.org/packages/base/versions/3.4.1/topics/mean)
+$\quad/\quad$
+$\; SE_{\hat{\mu}}=\sqrt{\hat{\sigma}^2/n}$ $\;\longrightarrow\quad$ [`seMean`](https://www.rdocumentation.org/packages/asympTest/versions/0.1.3/topics/seMean)
+
+* wariancja: $\;\hat{\sigma}^2=\frac{\sum_{i=1}^{n}(x_i-\hat{\mu})^2}{n-1}$ $\;\longrightarrow\quad$ [`var`](https://www.rdocumentation.org/packages/stats/versions/3.4.1/topics/cor)
+$\quad/\quad$
+$\;SE_{\hat{\sigma}^2}=\sqrt{\frac{\sum_{i=1}^{n}\big((x_i-\hat{\mu})^2-\hat{\sigma}^2_*\big)^2}{n\cdot(n-1)}}$ $\;\longrightarrow\quad$ [`seVar`](https://www.rdocumentation.org/packages/asympTest/versions/0.1.3/topics/seMean)
+
+$\quad\textrm{dla}\quad\hat{\sigma}^2_*=\sum_{i=1}^{n}(x_i-\hat{\mu})^2/n$
+
+Zauważmy, że badanym estymatorem $\hat{\theta}$ może być np. różnica lub iloraz dwóch parametrów.
+
+* błąd różnicy / ilorazu dwóch średnich: $\;SE_{\hat{\mu_1}-\hat{\mu_2}}$
+$\;\longrightarrow\quad$ [`seDMean`](https://www.rdocumentation.org/packages/asympTest/versions/0.1.3/topics/seMean) 
+$\quad/\quad$
+$\;SE_{\hat{\mu}_1/\hat{\mu}_2}$
+$\;\longrightarrow\quad$
+[`seRMean`](https://www.rdocumentation.org/packages/asympTest/versions/0.1.3/topics/seMean)
+
+* błąd różnicy / ilorazu dwóch wariancji: $\;$
+$SE_{\hat{\sigma}_1^2-\hat{\sigma}_2^2}$
+$\;\longrightarrow\quad$
+[`seDVar`](https://www.rdocumentation.org/packages/asympTest/versions/0.1.3/topics/seMean)
+$\quad/\quad$
+$SE_{\hat{\sigma}_1^2/\hat{\sigma}_2^2}$
+$\;\longrightarrow\quad$
+[`seRVar`](https://www.rdocumentation.org/packages/asympTest/versions/0.1.3/topics/seMean)
+
+Warto w tym miejscu zwrócić uwagę na funkcję [`win`](https://www.rdocumentation.org/packages/asbio/versions/1.4-2/topics/win) za pomocą której wartości z próbki można poddać procesowi winsoryzacji. Taki zabieg jest stosowany do konstrukcji odpornych estymatorów np. [średniej winsorowskiej](https://pl.wikipedia.org/wiki/%C5%9Arednia_winsorowska).
+
+* średnia winsorowska $\hat{\mu}_w\;\longrightarrow\quad$
+[`winmean`](https://www.rdocumentation.org/packages/WRS2/versions/0.9-2/topics/trimse)
+ $\quad/\quad$ błąd średniej winsorowskiej: $SE_{\hat{\mu}_{w}}$ $\;\longrightarrow\quad$ [`winmse`](https://www.rdocumentation.org/packages/WRS2/versions/0.9-2/topics/trimse)
+ 
+* średnia ucięta $\hat{\mu}_t$ $\;\longrightarrow\quad$ [`mean`](https://www.rdocumentation.org/packages/base/versions/3.4.1/topics/mean) $\quad/\quad$ błąd średniej uciętej: $SE_{\hat{\mu}_{t}}$ $\;\longrightarrow\quad$ [`trimse`](https://www.rdocumentation.org/packages/WRS2/versions/0.9-2/topics/trimse)
+
+* kwantyle $\hat{q}_{HD}$ $\quad/\quad$ błąd kwantyla: $SE_{\hat{q}_{HD}}$ $\;\longrightarrow\quad$ [`hdquantile`](https://www.rdocumentation.org/packages/Hmisc/versions/4.0-3/topics/hdquantile)
+
+Metody symulacyjne są często stosowane gdy nie wiemy z jakiego rozkładu pochodzi zmienna losowa.
+Przypomnijmy, np. metoda bootstrap polega na wielokrotnym losowaniu ze zwracaniem z próby w celu wyznaczenia $B$ estymatorów $\hat{\theta}$. Inaczej mówiąc, tworzymy wektor
+$\hat{\theta}_i^*=[\hat{\theta}_1,\;\hat{\theta}_2,\;\dots,\;\hat{\theta}_B]$
+i na jego podstawie obliczamy średnią (szacunek estymatora) oraz odchylenie standardowe (błąd estymatora).
+Do wyznaczenia wektora $\hat{\theta}^*_i$ oraz estymacji parametru $\theta$ można wykorzystać funkcję  [`boot`](https://www.rdocumentation.org/packages/boot/versions/1.3-19/topics/boot).
+Innym rozwiązaniem jest zastosowanie funkcji [`replicate`](https://www.rdocumentation.org/packages/base/versions/3.4.1/topics/lapply) lub [`lapply`](https://www.rdocumentation.org/packages/base/versions/3.4.1/topics/lapply) w połączeniu z funkcją [`sample`](https://www.rdocumentation.org/packages/base/versions/3.4.1/topics/sample) a następnie obliczenie wartości estymatora  i jego błąd standardowy odpowiednio z wykorzystaniem funkcji [`mean`](https://www.rdocumentation.org/packages/base/versions/3.4.1/topics/mean) i [`sd`](https://www.rdocumentation.org/packages/stats/versions/3.4.1/topics/sd).
+Dodajmy, że metody symulacyjne do których należy metoda bootstrap są bardzo wymagające obliczeniowo. Warto więc podkreślić, że w funkcji [`boot`](https://www.rdocumentation.org/packages/boot/versions/1.3-19/topics/boot) są dostępne opcje które umożliwiają zaangażowanie wybranej liczby rdzeni procesora do obliczeń.
+Również funkcja [`lapply`](https://www.rdocumentation.org/packages/base/versions/3.4.1/topics/lapply) ma swój wielordzeniowy odpowiednik - funkcja [`mclapply`](https://www.rdocumentation.org/packages/parallel/versions/3.4.1/topics/mclapply) z pakietu [`parallel`](https://www.rdocumentation.org/packages/parallel/versions/3.4.1).
+
+Na podstawie dystrybuanty empirycznej (funkcja [`ecdf`](https://www.rdocumentation.org/packages/stats/versions/3.4.1/topics/ecdf)) lub teoretycznej (funkcja [`pnorm`](https://www.rdocumentation.org/packages/stats/versions/3.4.1/topics/Normal)) można wyznaczyć prawdopodobieństwo czyli p-wartość i podjąć decyzję o odrzuceniu lub braku podstaw do odrzucenia hipotezy zerowej. Inaczej mówiąc, odrzucamy hipotezę zerową gdy p-wartość$<\alpha$ natomiast brak jest podstaw do jej odrzucenia gdy p-wartość$>\alpha$. Najczęściej przyjmuje się, że poziom istotności $\alpha=0,05$.
+
+$$
+\begin{aligned}
+H_{0}:\;\theta=\theta_{0}\quad\textrm{vs.}\quad H_{1}:\;\theta\neq\theta_{0}\quad\longrightarrow\quad
+&
+\textrm{p-wartość}=2\;\textrm{min}\;(p,1-p)
+&
+\textrm{(test dwustronny)}
+\end{aligned}
+$$
+Wartość $p$ czyli prawdopodobieństwo obliczamy na podstawie dystrybuanty empirycznej lub teoretycznej. Dla metody bootstrap: $p=P(\hat{\theta}^*\leq\theta_0)$ natomiast dla metody asymptotycznej: $p=P(\theta_0,\,\hat{\theta},SE_{\hat{\theta}})$.
+```{r}
+# wygenerowanie wektora liczb:
+set.seed(2305); x <- rnorm(30, 0,1)
+# błąd standardowy średniej:
+SE_mu <- sqrt(var(x)/length(x))
+# estymator średniej:
+MU <- mean(x)
+# prawdopodobieństwo z rozkładu normalnego dla testowej wartości:
+p <- pnorm(0,MU,SE_mu)
+# p-wartość:
+2*min(p, 1-p)
+```
+```{r}
+set.seed(2305); m <- replicate(10000, mean(sample(x,30,T)))
+p <- mean(m<0)
+2*min(p, 1-p)
+```
+
+Decyzję o odrzuceniu (lub nie) hipotezy zerowej można podjąć również w oparciu o przedział ufności z wykorzystaniem kwantyli z rozkładu normalnego -- [`qnorm`](https://www.rdocumentation.org/packages/stats/versions/3.1.1/topics/Normal):
+$$\theta=\hat{\theta}\pm z_{\alpha/2}\cdot SE_{\hat{\theta}}$$
+```{r}
+qn <- qnorm(0.05/2,0,1)
+c(MU+qn*SE_mu, MU-qn*SE_mu)
+```
+
+W przypadku bootstrapowej metody percentyli
+wystarczy obliczyć odpowiedni kwantyl za pomocą funkcji [`quantile`](https://www.rdocumentation.org/packages/stats/versions/3.4.1/topics/quantile) lub [`hdquantile`](https://www.rdocumentation.org/packages/Hmisc/versions/4.0-3/topics/hdquantile). Dla dwustronnego przedziału ufności będzie to $q_{\alpha/2}$ oraz $q_{1-\alpha/2}$. Jeśli wartość badanego estymatora znajdzie się w przedziale ufności to jest barak podstaw do odrzucenia hipotezy zerowej. W sytuacji odwrotnej hipotezę zerową odrzucamy.
+Do wyznaczenia przedziału ufności można wykorzystać również funkcję [`boot.ci`](https://www.rdocumentation.org/packages/boot/versions/1.3-19/topics/boot.ci) która oprócz metody percentyli oferuje także inne rozwiązania np. metodę Bias-Corrected Bootstrap.
+```{r}
+quantile(m, c(0.025,0.975))
+```
+
+Powyżej przedstawione obliczenia miały na celu pokazać proces dochodzenia do wyniku końcowego tzn. jak obliczyć przedział ufności lub p-wartość.
+W praktyce stosujemy gotowe rozwiązania które są zaimplementowane w pakietach statystycznych i zostaną przedstawione w dalszej części tego opracowania.
+
+## Testowanie parametrów {#part_12}
+
+### Testy dla parametru położenia {#part_121}
+
+Najczęściej hipotezy satystyczne są weryfikowane w oparciu o średnią z wykorzystaniem rozkładu t-Studenta. Dla dużej próby częstą praktyką jest przybliżanie rozkładu t-Studenta za pomocą rozkładu normalnego.
+$$SE_{\hat{\mu}}=\sqrt{\hat{\sigma}^2/n}$$
+gdzie: $\hat{\sigma}^2$ to nieobciążony estymator wariancji oraz $n$ to liczebność próby.
+
+```{r}
+asympTest::asymp.test(x)
+```
+Jednak gdy dane pochodzą z rozkładu innego niż normalny (rozkład skośny, obserwacje odstające itp.) stosowanie testu t-Studenta nie jest dobrym wyborem. Jednym z możliwych
+rozwiązań jest zweryfikowanie hipotezy statystycznej w oparciu o odporne estymatory. Ich szerszy opis można znaleźć w pracy [@wilcox2017]. Przykładowo, błąd standardowy dla średniej uciętej [@tmc1963] ma wzór:
+$$SE_{\hat{\mu}_t}=\sqrt{s_w^2/(1-2G)^2\;n}$$
+
+gdzie: $s_w^2=\frac{1}{n-1}\sum_{i=1}^{n}(w_i-\bar{x}_w)^2$ to wariancja winsorowska, $w_i$ to wartości z oryginalnej próbki poddanej procesowi winsoryzacji, $G$ to proporcja wartości przyciętych.
+```{r}
+WRS::trimci(x, tr= 0.2, null.value= 0, pr= F)
+```
+
+Warto zauważyć, że dla parametru obcięcia równego $G=0$ wzór zostanie uproszczony do klasycznej wersji testu t-Studenta. Inaczej mówiąc, średnia ucięta i wariancja winsorowska będą równe odpowiednio średniej arytmetycznej i wariancji. Natomiast dla $G=0.5$ możemy otrzymać estymator mediany, ale wnioskowanie o medianie za pomocą tej metody nie powinno być wykonywane. Dla rozkładów ciągłych opracowano metodę budowy przedziału ufności mediany w oparciu o błąd standardowy [@ms1984].
+$$SE_{\hat{m}}=\frac{x_{n-k+1}-x_{k}}{2\cdot z_{\,0.995}}$$
+gdzie: $k=\frac{n+1}{2}-z_{\,0.995}\cdot\sqrt{\frac{n}{4}}$ oraz $z_{0.995}$ to kwantyl rzędu $99.5\%$ z rozkładu normalnego. 
+
+```{r}
+WRS::msmedci(x, nullval= 0)
+```
+
+Inne rozwiązanie to konstrukcja przedziału ufności w oparciu o interpolację [@hs1986]
+oraz jego uogólnienie na dowolne kwantyle [@nb1992].
+Dodajmy jeszcze, że dobrą propozycją jest stosowanie estymatorów z wykorzystaniem rozkładu beta [@mj1978] lub [@hd1982]. Ostatnie rozwiązanie w wersji bootstrap jest często proponowane gdy występują duplikaty w próbce.
+
+```{r}
+WRS::hdpb(x, est= WRS::hd, alpha= 0.05, nboot= 2000, SEED= TRUE, nv= 0)
+```
+
+### Testy dla parametru skali {#part_122}
+
+Do badania parametru skali
+można zweryfikować hipotezę statystyczną dotyczącą np. wariancji tzn.:
+$$H_{0}:\;\sigma^2=\sigma^2_0\quad\textrm{vs.}\quad H_{1}:\;\sigma^2\neq\sigma^2_0$$
+W takiej sytuacji przeważnie proponowane jest klasyczne rozwiązanie czyli test chi-kwadrat w którym zakładamy, że badana zmienna ma rozkład normalny.
+$$\chi^2=\frac{(n-1)\hat{\sigma}^2}{\sigma^2_0}\quad\longrightarrow\quad\chi^2_{df=n-1}$$
+```{r}
+DescTools::VarTest(x, sigma.squared= 1)
+```
+Podobnie jak w przypadku badania  parametru położenia (centralne twierdzenie graniczne) można obliczyć błąd standardowy dla wariancji:
+$$SE_{\hat{\sigma}^2}=\sqrt{\textrm{Var}(x_i-\hat{\mu})^2/n}=\sqrt{\sum_{i=1}^{n}\big((x_i-\hat{\mu})^2-\hat{\sigma}^2_*\big)^2/\big(n\cdot(n-1)\big)}$$
+gdzie: $\textrm{Var}(x_i):\hat{\sigma}^2=\sum_{i=1}^{n}(x_i-\hat{\mu})^2/(n-1)$ to estymator wariancji,  $\hat{\sigma}^2_*=\sum_{i=1}^{n}(x_i-\hat{\mu})^2/n$ to obciążony estymator wariancji.
+$$Z=\frac{\hat{\sigma}^2-\sigma^2_{0}}{SE_{\hat{\sigma}^2}}\quad\longrightarrow\quad N(0,1)$$
+```{r}
+asympTest::asymp.test(x, par= "var", ref= 1)
+```
+
+Dla małych prób można wykonać symulację komputerową np. bootstrapową metodę percentyli za pomocą funkcji [`boot.one.per`](https://www.rdocumentation.org/packages/wBoot/versions/1.0.3/topics/boot.one.per).
+```{r , message=FALSE, warning=FALSE, fig.show='hide'}
+wBoot::boot.one.per(x, var, null.hyp= 1, R= 10000)
+```
+
+## Testowanie założeń
+
+### Testy losowości
+
+Założenie losowości próby (np. brak autokorelacji, trendu) można zweryfikować na podstawie testu serii [@wald1940] w którym zliczamy wszystkie sekwencje - liczba serii. Dokładną p-wartość obliczamy na podstawie wzorów:
+
+* parzysta liczby serii:
+
+$$P(R=2k)=\frac{2\cdot C^{n_1-1}_{k-1}\cdot C^{n_2-1}_{k-1}}{C^{n_1+n_2}_{n_1}}\quad\textrm{dla}\quad k=R/2$$
+
+* nieparzysta liczba serii:
+
+$$P(R=2k+1)=\frac{C^{n_1-1}_{k-1}\cdot C^{n_2-1}_{k}+C^{n_1-1}_{k}\cdot C^{n_2-1}_{k-1}}{C^{n_1+n_2}_{n_1}}\quad\textrm{dla}\quad k=(R-1)/2$$
+```{r}
+randtests::druns(2, 6, 9)+ randtests::druns(3, 6, 9)
+```
+
+```{r}
+randtests::pruns(3, 6, 9)
+```
+Ze względu na wielkość próby wyznaczenie dokładnej p-wartości nie jest zawsze możliwe. Dla dużych prób rozkład liczby serii można wyznaczyć w sposób symulacyjny lub aproksymować go za pomocą rozkładu normalnego.
+
+$$Z=\frac{R+h-E(R)}{\sqrt{V(R)}}\quad\longrightarrow\quad N(0,1)$$
+gdzie: $E(R)=\frac{2n_1n_2}{n_1+n_2}+1$ to wartość średnia, 
+$V(R)=\frac{2n_1 n_2(2n_1 n_2-n_1n_2)}{(n_1+n_2)^2(n_1+n_2-1)}$ to wariancja, $h=\pm 0,5$ to korekta na ciągłość. Jeśli $R<E(R)$ to $h=0,5$ natomiast w sytuacji odwrotnej tzn. $R>E(R)$ mamy $h=-0,5$.
+```{r}
+set.seed(2305); x <- sample(1:30, 40, T)
+```
+```{r}
+DescTools::RunsTest(x, exact= FALSE, correct= TRUE)
+```
+Warto podkreślić, że metod testowania losowości jest więcej [@Wang2003] a niektóre z nich mogą mieć większą moc niż test serii. Przykładem może być test losowości von Neumanna oparty na rangach [@bar1982].
+```{r}
+randtests::bartels.rank.test(x, pvalue="normal")
+```
+
+### Testy normalności
+
+Do badania normalności rozkładu w języku R można skorzystać z wielu metod
+[@lafa2016] które mają swoje mocne i słabe strony [@biecek2013]. Inaczej mówiąc nie ma jednej uniwersalnej procedury która sprawdzi się dobrze w każdych warunkach. Warto dodać, że pomimo wielu ciekawych rozwiązań np. test oparty na entropii 
+[@dbgof2013] test Shapiro-Wilka wciąż cieszy się największą popularnością.
+```{r}
+shapiro.test(x)
+```
+```{r}
+dbEmpLikeGOF::dbEmpLikeGOF(x, testcall= "normal", pvl.Table= F, vrb= F)
+```
+
+### Testy jednorodności wariancji
+
+Badanie homogeniczności wariancji sprowadza się do porównania dwóch lub kilku zmiennych pod kątem równości wariancji. W przypadku dwóch zmiennych bardzo częstym wyborem jest test F czyli klasyczne rozwiązanie w którym zakładamy, że zmienne mają rozkład normalny.
+$$F=\frac{\hat{\sigma}^2_1}{\hat{\sigma}^2_2\;r_0}\quad\longrightarrow\quad F_{df_1=n_1-1,\;df_2=n_2-1}$$
+gdzie: $\hat{\sigma}^2_k=\frac{\sum_{i=1}^{n}(x_i-\hat{\mu})^2}{n-1}$ to wariancje dla $k=1,2$.
+```{r}
+set.seed(2305); d <- data.frame(x= rnorm(20, 0,1), y= rnorm(20, 0,2))
+```
+```{r}
+with(DescTools::VarTest(x, y, ratio= 1), data= d)
+```
+
+Ciekawą alternatywą jest testowanie wariancji w oparciu o centralne twierdzenie graniczne [@asym2009] za pomocą której można zweryfikować jedną z wybranych hipotez zerowych:
+
+(1) iloraz dwóch wariancji:
+$$H_{0}:\;\sigma^2_1/\sigma^2_2=r_0\quad\textrm{vs.}\quad H_{1}:\;\sigma^2_1/\sigma^2_2\neq r_0$$
+Statystyka testu:
+$$Z=\frac{\hat{\sigma}^2_1/\hat{\sigma}^2_2-r_0}{SE_{\hat{\sigma}^2_1/\hat{\sigma}^2_2}}\quad\longrightarrow\quad N(0,1)$$
+gdzie: $SE_{\hat{\sigma}^2_1/\hat{\sigma}^2_2}=\frac{1}{\hat{\sigma}^2_{2}}\sqrt{\frac{\textrm{Var}(x_{i}-\hat{\mu})^2}{n_1}+r^2_{}\cdot \frac{\textrm{Var}(y_i-\hat{\mu})^2}{n_2}}$ to błąd standardowy iloczynu wariancji, $r^2$ to iloczyn wariancji podniesiony do drugiej potęgi tzn. $\big(\textrm{Var}(x_i)/\textrm{Var}(y_i)\big)^2=\big(\hat{\sigma}_1^2/\hat{\sigma}_2^2\big)^2$ 
+```{r}
+asympTest::asymp.test(d$x, d$y, par= "rVar", ref= 1)
+```
+
+(2) różnica dwóch wariancji:
+$$H_{0}:\;\sigma^2_1-\sigma^2_2=d_0\quad\textrm{vs.}\quad H_{1}:\;\sigma^2_1-\sigma^2_2\neq d_0$$
+Statystyka testu:
+$$Z=\frac{\big(\hat{\sigma}^2_1-\hat{\sigma}^2_2\big)-d_0}{SE_{\hat{\sigma}^2_1-\hat{\sigma}^2_2}}\quad\longrightarrow\quad N(0,1)$$
+gdzie: $SE_{\hat{\sigma}^2_1-\hat{\sigma}^2_2}=\sqrt{\frac{\textrm{Var}(x_{i}-\hat{\mu})^2}{n_1}+\rho^2_{}\cdot \frac{\textrm{Var}(y_i-\hat{\mu})^2}{n_2}}$ to błąd standardowy różnicy wariancji, $\rho^2$ to opcjonalny parametr do osłabienia/wzmocnienia udziału drugiej wariancji.
+```{r}
+asympTest::asymp.test(d$x, d$y, rho= 1, par= "dVar", ref= 0)
+```
+
+Test Bartletta, Fligner-Killen lub Levene przeważnie są stosowane dla kilku wariancji ale nic nie stoi na przeszkodzie aby wykorzystać je do testowania dwóch wariancji.
+W przeciwieństwie do testu Bartletta dwa ostatnie testy są mało wrażliwe na odchylenie od rozkładu normalnego w próbkach [@biecek2017, *pg. 256-258*].
+Dodajmy, że test Levene i Fligner-Killeen mogą występować w trzech wariantach tzn. za parametr lokalizacji można przyjąć średnią, średnią uciętą lub medianę.
+```{r}
+d2 <- stack(d)
+lawstat::levene.test(d2$values, d2$ind, location ="trim.mean", trim.alpha= 0.2,
+                     bootstrap= TRUE, num.bootstrap= 1000)
+```
+```{r}
+coin::fligner_test(values~ ind, data= d2, distribution= coin::approximate(B=1000))
+```
+
+# References {-}

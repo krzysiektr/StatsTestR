@@ -1,0 +1,5 @@
+---
+title: "Statystyka w R"
+---
+
+ > Na tej stronie są zamieszczone materiały na temat wykorzystania języka R w statystyce.

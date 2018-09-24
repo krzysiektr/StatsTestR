@@ -1,0 +1,255 @@
+---
+title: "Rozdział 2"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+author: Krzysztof Trajkowski
+bibliography: bibliography.bib
+output:
+  html_document:
+    citation_package: natbib
+    toc: true
+link-citations: true
+---
+
+# Metody klasyczne / odporne
+
+## Zmienne niezależne
+
+### Test t-Studenta / Welcha
+
+Do porównania dwóch średnich $H_0:\;\mu_1=\mu_2$
+najczęsciej proponowany jest test t-Studenta. Ale wymaga on spełnienie dwóch warunków: normalność rozkładu oraz jednorodności wariancji.
+Statystyka klasycznego testu dla dwóch średnich:
+$(\bar{x}_1-\bar{x}_2)/\sqrt{d_1+d_2}$
+ma rozkład t-Studenta ze stopniami swobody: $$df=n_1+n_2-2$$
+
+Jeśli wariancje w próbkach nie są równe to zalecane jest stosowanie poprawki Welcha
+[@welch2016] która polega na modyfikacji stopni swobody:
+$$df_{\textrm{Welch}}=\frac{(d_1+d_2)^2}{\frac{d_1}{n_1-1}+\frac{d_2}{n_2-1}}$$
+
+gdzie: $d_k=\frac{s^2_k}{n_k}$ oraz $s^2_k$ to wariancja i $n_k$ to liczebność próby dla $k=1,2$.
+
+```{r}
+set.seed(2305)
+dWelch <- data.frame(y= c(rnorm(15,2,1),rnorm(20,2,1.5)),
+                     g= factor(rep(LETTERS[1:2],c(15,20))))
+```
+
+```{r fig.width=9, fig.height=3, fig.align='center', message=FALSE, fig.pos="h", warning=FALSE,echo=FALSE, fig.cap="Charakterystyka  zbioru danych - dWelch"}
+library("ggplot2")
+library("dplyr")
+library("grid")
+e <- dWelch %>% group_by(g) %>% summarise(me=mean(y),sw=round(shapiro.test(y)$p.value,4)) %>% arrange(-me) %>% as.data.frame()
+vG <- round(bartlett.test(y~g,data=dWelch)$p.value,4)
+p1 <-
+ggplot(dWelch,aes(reorder(g,y,mean),y, fill =g))+
+  geom_boxplot()+
+  scale_fill_brewer(palette = "Greens",
+                    name="Test Shapiro-Wilka",
+                    breaks=e$g,
+                    labels=c(paste("p-wartość:",e$sw[1]),paste("p-wartość:",e$sw[2])))+
+  labs(title = "Test Bartletta", subtitle = paste("p-wartość: ",vG))+
+  coord_flip()+xlab("Group")+
+  geom_text(stat="count", aes(label=paste0("n=",..count..)), y=0.95*max(dWelch$y), size=4,col="darkred",vjust=1.5)+
+  stat_summary(fun.y=mean, colour="darkred", geom="point", 
+               shape=18, size=3,show.legend = F)+
+  stat_summary(aes(label=round(..y..,2)) ,fun.y= "mean", colour="darkred", size=4, geom= "text",hjust=-0.2,vjust=0.5)
+pushViewport(viewport(layout = grid.layout(1, 1)))
+print(p1, vp= viewport(layout.pos.row= 1, layout.pos.col= 1))
+```
+```{r}
+t.test(y~ g, data= dWelch)
+```
+
+### ANOVA / ANOVA-Welch
+
+Rozszerzeniem testu t-Studenta na więcej niż dwa poziomy zmiennej grupującej jest test ANOVA. Warunkiem jej stosowania jest normalność rozkładu oraz homogeniczność wariancji.
+Jeśli warunek jednorodności wariancji jest naruszony to należy stosować procedurę ANOVA-Welcha.
+```{r}
+set.seed(2305)
+DWelch <- data.frame(y= c(rnorm(20,0,1),rnorm(20,1.5,2),rnorm(20,1.5,2)),
+                     g= factor(rep(LETTERS[1:3],each=20)))
+```
+```{r fig.width=9, fig.height=3, fig.align='center', message=FALSE, fig.pos="h", warning=FALSE,echo=FALSE, fig.cap="Charakterystyka  zbioru danych - DWelch"}
+e <- DWelch %>% group_by(g) %>% summarise(me=mean(y),sw=round(shapiro.test(y)$p.value,4)) %>% arrange(-me) %>% as.data.frame()
+vG <- round(bartlett.test(y~g,data=DWelch)$p.value,4)
+p1 <-
+ggplot(DWelch,aes(reorder(g,y,mean),y, fill =g))+
+  geom_boxplot()+
+  scale_fill_brewer(palette = "Greens",
+                    name="Test Shapiro-Wilka",
+                    breaks=e$g,
+                    labels=c(paste("p-wartość:",e$sw[1]),
+                             paste("p-wartość:",e$sw[2]),
+                             paste("p-wartość:",e$sw[3])))+
+  labs(title = "Test Bartletta", subtitle = paste("p-wartość: ",vG))+
+  coord_flip()+xlab("Group")+
+  geom_text(stat="count", aes(label=paste0("n=",..count..)), y=0.95*max(DWelch$y), size=4,col="darkred",vjust=1.5)+
+  #stat_summary(aes(label=round(..y..,2)) ,fun.y= "max", colour="darkred", size=4, geom= "text",hjust=-0.2,vjust=0.5)+
+  stat_summary(fun.y=mean, colour="darkred", geom="point", 
+               shape=18, size=3,show.legend = F)+
+  stat_summary(aes(label=round(..y..,2)) ,fun.y= "mean", colour="darkred", size=4, geom= "text",hjust=-0.2,vjust=0.5)
+pushViewport(viewport(layout = grid.layout(1, 1)))
+print(p1, vp= viewport(layout.pos.row= 1, layout.pos.col= 1))
+```
+```{r}
+oneway.test(y~ g, data= DWelch)
+```
+
+### Testy post hoc
+
+Po odrzuceniu hipotezy zerowej dla przypadku heteroskedastyczności można wykonać serię testów Welcha z poprawką na porównania wielokrotne np. Hochberga.
+Ta metoda jest zaimplementowana w funkcji
+[`pairwise.t.test`](https://www.rdocumentation.org/packages/stats/versions/3.5.0/topics/pairwise.t.test) w której trzeba dodać opcję `pool.sd= F` ponieważ domyślnie są wykonywane klasyczne testy t-Studenta.
+```{r}
+pairwise.t.test(DWelch$y, DWelch$g, pool.sd= F, p.adjust.method= "hochberg")
+```
+
+### Uwagi końcowe
+
+(1) W pakiecie **onewaytests** [@oneway2018] są dostępne także inne metody dla jednoczynnikowej analizy wariancji w warunkach heteroskedastyczności. Za przykład niech posłuży test Browna-Forsythe.
+
+```{r}
+onewaytests::bf.test(y~ g, data= DWelch)
+```
+
+(2) W pakiecie **doex** [@aovHeter] można znaleźć dużo większy zestaw rozwiązań niż w bibliotece przedstawionej powyżej. Warto zwrócić 
+szczególną uwagę na rozwiązania które są oparte na symulacji monte carlo np. zmodyfikowana wersja uogólnionego testu F z wykorzystaniem M-estymatorów (Huber`s) [@aovRob2017]. Wszystkie metody z tego pakietu są przeznaczone tylko dla jednoczynnikowej analizy wariancji. Poniżej przykład zmodyfikowanej metody Browna-Forsythe.
+```{r}
+with(doex::MBF(y,g), data= DWelch)
+```
+
+(3) W pakiecie **PMCMRplus** [@pmcmr2018] zostało zaimplementowanych wiele testów post hoc które są odporne na heteroskedastyczność. Przykładowo, zamiast serii testów Welcha można wykorzystać np. metodę Gamesa-Howella.
+
+```{r ,message=c(1,4)}
+summary(PMCMRplus::gamesHowellTest(y~ g, data= DWelch))
+```
+
+(4) Korektę na heteroskedastyczność wariancji (np. kanapkowy estymator wriancji z biblioteki **sandwich**) dla testów post hoc można wykonać z wykorzystaniem pakietu **multcomp** [@multcomp2010].
+
+```{r}
+postHoc <- multcomp::glht(lm(y~g, data= DWelch), multcomp::mcp(g="Tukey"),
+                          vcov= sandwich::sandwich)
+summary(postHoc, test= multcomp::Chisqtest())
+set.seed(2305); summary(postHoc)
+```
+
+## Zmienne zależne
+
+### Test t-Studenta
+
+Test t-Studenta przeprowadzamy także dla dwóch sparowanych zmiennych gdy spełnione jest założenie normalności rozkładu. Ta metoda sprowadza się do wykonania testu t-Studenta dla jednej zmiennej ponieważ badamy wartości obiczone na podstawie różnic z dwóch zmiennych.
+```{r}
+set.seed(2305)
+dpaired <- data.frame(y= c(rnorm(25,2,1),rnorm(25,2,1.5)),
+                      g= factor(rep(LETTERS[1:2],c(25,25))), b= factor(rep(1:25,2)))
+```
+```{r fig.width=9, fig.height=3, fig.align='center', message=FALSE, fig.pos="h", warning=FALSE,echo=FALSE, fig.cap="Charakterystyka  zbioru danych - dpaired"}
+di <- subset(dpaired,g=="A")$y-subset(dpaired,g=="B")$y
+#dif <- data.frame(y=di,g=factor(rep(LETTERS[1],25)))
+e <- dpaired %>% group_by(g) %>% summarise(me=mean(y),sw=round(shapiro.test(y)$p.value,4)) %>% arrange(-me) %>% as.data.frame()
+vG <- round(shapiro.test(di)$p.value,4)
+p1 <-
+ggplot(dpaired,aes(reorder(g,y,mean),y, fill =g))+
+  geom_boxplot()+
+  scale_fill_brewer(palette = "Greens",
+                    name="Test Shapiro-Wilka",
+                    breaks=e$g,
+                    labels=c(paste("p-wartość:",e$sw[1]),paste("p-wartość:",e$sw[2])))+
+  labs(title = "Test Shapiro-Wilka dla różnicy danych", subtitle = paste("p-wartość: ",vG))+
+  coord_flip()+xlab("Group")+
+  geom_text(stat="count", aes(label=paste0("n=",..count..)), y=0.95*max(dpaired$y), size=4,col="darkred",vjust=1.5)+
+  stat_summary(fun.y=mean, colour="darkred", geom="point", 
+               shape=18, size=3,show.legend = F)+
+  stat_summary(aes(label=round(..y..,2)) ,fun.y= "mean", colour="darkred", size=4, geom= "text",hjust=-0.2,vjust=0.5)+
+  theme(plot.title = element_text(face = "bold"),legend.title= element_text(face = "bold"))
+#pushViewport(viewport(layout = grid.layout(1, 1)))
+#print(p1, vp= viewport(layout.pos.row= 1, layout.pos.col= 1))
+```
+```{r}
+t.test(y~ g, data= dpaired, paired= T)
+```
+
+
+### RM ANOVA / Huynh-Feldt
+
+Klasyczna ANOVA dla powtarzanych pomiarów (ang. repeated measures ANOVA) jest uogólnieniem testu t-Studenta dla dwóch zmiennych zależnych. Metoda ta wymaga spełnienia dwóch założeń: normalność i sferyczność (słabsza forma symetrii złożonej) którą można zweryfikować za pomocą testu Mauchly.
+W przypadku gdy założenie o sferyczności nie jest spełnione należy wziąść pod uwagę jedną z dwóch poprawek Greenhouse-Geisser lub Huynha-Feldta ewentualnie zastosować test MANOVA [@Obrien1985].
+```{r}
+set.seed(4101)
+Dpaired <- data.frame(y=c(rnorm(20,0,1),rnorm(20,1.5,3),rnorm(20,1.5,2)),
+                      g=factor(rep(LETTERS[1:3],each=20)),
+                      b=factor(rep(letters[1:20],3)))
+```
+```{r}
+mauchly.test(lm(matrix(Dpaired[,1],20,3)~1), X= ~1)$p.value
+```
+```{r}
+anova(lm(matrix(Dpaired[,1],20,3)~1), X= ~1, test= "Spherical")
+anova(lm(matrix(Dpaired[,1],20,3)~1), X= ~1, test= "Wilks")
+```
+
+### Testy post hoc
+
+Oczywiście (podobnie jak w przypadku ANOVA dla zmiennych niezależnych) jest możliwość przeprowadzenia serii testów t-Studenta dla zmiennych zależnych.
+```{r}
+with(data= Dpaired, pairwise.t.test(y, g, p.adj= "hochberg", paired= T))
+```
+
+### Uwagi końcowe
+
+(1) Zamiast klasycznego modelu RM ANOVA (także z wybraną korektą) lub MANOVA coraz częściej są proponowane liniowe modele mieszane [@ziel2010].
+
+```{r}
+sol <- nlme::lme(y~ g, data= Dpaired, random= ~1|b, corr=nlme::corCompSymm(form=~1|b))
+anova(sol)
+```
+
+(2) W modelach mieszanych można modelować strukturę wariancji-kowariancji (symetria złożona, niestrukturalna) i uwzględniać heterogeniczność wariancji.
+
+```{r}
+res <- nlme::lme(y~ g, data= Dpaired, random= ~1|b, corr=nlme::corSymm(form=~1|b),
+                 weights= nlme::varIdent(form= ~1|g))
+anova(res)
+```
+
+(3) W oparciu o test ilorazu wiarygodności (także kryterium wartości AIC i BIC) możemy określić który z rozważanych modeli będzie lepszy.
+
+```{r}
+anova(sol,res)
+```
+
+(4) Po wyborze odpowiedniego modelu, można wykonać dalszą analizę za pomocą funkcji z pakietu **multcomp**.
+```{r}
+ph <- multcomp::glht(res, linfct= multcomp::mcp(g= "Tukey"))
+summary(ph, test= multcomp::Chisqtest())
+summary(ph)
+```
+
+## Co dalej
+
+W przypadku gdy chcemy porównać różnice średnich (lub ilorazy) a dane pochodzą z rozkładu normalnego (nie koniecznie o równych wariancjach w grupach) to możemy skorzystać z pakietu **SimComp** [@simcomp2014]. To rozwiązanie może być dobrym uzupełnieniem wyników dla jednoczynnikowej analizy wariancji ANOVA lub MANOVA.
+Inne rozwiązanie [@GFD2017] nie wymaga spełnienia żadnych założeń tzn. normalności oraz homoskedastyczności i zostało udostępnione w pakiecie **GFD**. Dodatkowo modele ANOVA-type-statistic oraz Wald-type-statistic (także w wersji permutacyjnej) umożliwiają analizę bardziej rozbudowanych modeli badawczych. Inaczej mówiąc, możemy badać modele jedno lub wieloczynnikowe (jedna lub wiele zmiennych grupujących) z interakcjami.
+Gdy występują obserwacje odstające (mają one wpływ na normalność rozkładu i jednorodność wariancji)
+to zamiast estymatora średniej można wykorzystać odporne estymatory: średnią uciętą i wariancję winsorowską. 
+Metoda która wykorzystuje wyżej wymienione estymatory to test Yuena [@yuen2007] który dla parametru ucięcia równego zero uprości się do testu Welcha. Z kolei uogólniona metoda Welcha-Jamesa [@wj1980] rozwiązuje problem jedno lub wieloczynnikowej analizy wariancji w warunkach heteroskedastyczności. W pakiecie **welchADF** ta metoda została rozszerzona [@welchADF] o możliwość analizowania średniej uciętej w wersji bootstrap. Takie podejście znajdziemy także w pakiecie **WRS** ale nie jest on dostępny w repozytorium CRAN - proces jego instalacji można znaleźć pod adresem: [link](https://dornsife.usc.edu/labs/rwilcox/software/).
+Warto zwrócić uwagę także na bliźniaczy pakiet **WRS2** który jest zamieszczony w repozytorium CRAN ale udostępniono w nim tylko część funkcji z biblioteki **WRS**.
+Szerszy opis metod z obu bibliotek można znaleźć w [@wilcox2017] oraz [@wrs2] odpowiednio dla pakietu **WRS** i **WRS2**.
+Dodajmy, że do funkcji z pakietu **WRS** należy wprowadzać dane tylko w formie listy tzn. nie deklarujemy modelu za pomocą formuły. Aby ułatwić to zadanie udostępniono funkcję `fac2list` za pomocą której można przekształcić ramkę danych w listę.
+
+```{r}
+DWelch2 <- WRS::fac2list(DWelch[,1],DWelch[,2])
+```
+```{r}
+WRS::t1way(DWelch2, tr= 0.2)
+WRS::lincon(DWelch2, tr= 0.2)["psihat"]
+```
+
+```{r}
+Dpaired2 <- WRS::fac2list(Dpaired[,1],Dpaired[,2])
+```
+```{r}
+WRS::rmanova(Dpaired2, tr= 0.2)[c("test","p.value","tmeans")]
+WRS::rmmcp(Dpaired2, tr= 0.2)[c("test","psihat")]
+```
+
+# References {-}

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Krzysztof Trajkowski" />
+
+
+<title>Rozdział 2</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Statystyka w R
+  </a>
+</li>
+<li>
+  <a href="Statystyka_w_R_R01.html">Wprowadzenie do testowania</a>
+</li>
+<li>
+  <a href="Statystyka_w_R_R02.html">Metody klasyczne / odporne</a>
+</li>
+<li>
+  <a href="Statystyka_w_R_R03.html">Metody oparte na rangach</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Rozdział 2</h1>
+<h4 class="author"><em>Krzysztof Trajkowski</em></h4>
+<h4 class="date"><em>24 września, 2018</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#metody-klasyczne-odporne">Metody klasyczne / odporne</a><ul>
+<li><a href="#zmienne-niezalezne">Zmienne niezależne</a><ul>
+<li><a href="#test-t-studenta-welcha">Test t-Studenta / Welcha</a></li>
+<li><a href="#anova-anova-welch">ANOVA / ANOVA-Welch</a></li>
+<li><a href="#testy-post-hoc">Testy post hoc</a></li>
+<li><a href="#uwagi-koncowe">Uwagi końcowe</a></li>
+</ul></li>
+<li><a href="#zmienne-zalezne">Zmienne zależne</a><ul>
+<li><a href="#test-t-studenta">Test t-Studenta</a></li>
+<li><a href="#rm-anova-huynh-feldt">RM ANOVA / Huynh-Feldt</a></li>
+<li><a href="#testy-post-hoc-1">Testy post hoc</a></li>
+<li><a href="#uwagi-koncowe-1">Uwagi końcowe</a></li>
+</ul></li>
+<li><a href="#co-dalej">Co dalej</a></li>
+</ul></li>
+<li><a href="#references">References</a></li>
+</ul>
+</div>
+
+<div id="metody-klasyczne-odporne" class="section level1">
+<h1>Metody klasyczne / odporne</h1>
+<div id="zmienne-niezalezne" class="section level2">
+<h2>Zmienne niezależne</h2>
+<div id="test-t-studenta-welcha" class="section level3">
+<h3>Test t-Studenta / Welcha</h3>
+<p>Do porównania dwóch średnich <span class="math inline">\(H_0:\;\mu_1=\mu_2\)</span> najczęsciej proponowany jest test t-Studenta. Ale wymaga on spełnienie dwóch warunków: normalność rozkładu oraz jednorodności wariancji. Statystyka klasycznego testu dla dwóch średnich: <span class="math inline">\((\bar{x}_1-\bar{x}_2)/\sqrt{d_1+d_2}\)</span> ma rozkład t-Studenta ze stopniami swobody: <span class="math display">\[df=n_1+n_2-2\]</span></p>
+<p>Jeśli wariancje w próbkach nie są równe to zalecane jest stosowanie poprawki Welcha <span class="citation">(Derrick and White <a href="#ref-welch2016">2016</a>)</span> która polega na modyfikacji stopni swobody: <span class="math display">\[df_{\textrm{Welch}}=\frac{(d_1+d_2)^2}{\frac{d_1}{n_1-1}+\frac{d_2}{n_2-1}}\]</span></p>
+<p>gdzie: <span class="math inline">\(d_k=\frac{s^2_k}{n_k}\)</span> oraz <span class="math inline">\(s^2_k\)</span> to wariancja i <span class="math inline">\(n_k\)</span> to liczebność próby dla <span class="math inline">\(k=1,2\)</span>.</p>
+<pre class="r"><code>set.seed(2305)
+dWelch &lt;- data.frame(y= c(rnorm(15,2,1),rnorm(20,2,1.5)),
+                     g= factor(rep(LETTERS[1:2],c(15,20))))</code></pre>
+<div class="figure" style="text-align: center">
+<img src="Statystyka_w_R_R02_files/figure-html/unnamed-chunk-2-1.png" alt="Charakterystyka  zbioru danych - dWelch" width="864" />
+<p class="caption">
+Charakterystyka zbioru danych - dWelch
+</p>
+</div>
+<pre class="r"><code>t.test(y~ g, data= dWelch)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  y by g
+## t = -0.069803, df = 28.989, p-value = 0.9448
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.8001154  0.7473032
+## sample estimates:
+## mean in group A mean in group B 
+##        2.442944        2.469350</code></pre>
+</div>
+<div id="anova-anova-welch" class="section level3">
+<h3>ANOVA / ANOVA-Welch</h3>
+<p>Rozszerzeniem testu t-Studenta na więcej niż dwa poziomy zmiennej grupującej jest test ANOVA. Warunkiem jej stosowania jest normalność rozkładu oraz homogeniczność wariancji. Jeśli warunek jednorodności wariancji jest naruszony to należy stosować procedurę ANOVA-Welcha.</p>
+<pre class="r"><code>set.seed(2305)
+DWelch &lt;- data.frame(y= c(rnorm(20,0,1),rnorm(20,1.5,2),rnorm(20,1.5,2)),
+                     g= factor(rep(LETTERS[1:3],each=20)))</code></pre>
+<div class="figure" style="text-align: center">
+<img src="Statystyka_w_R_R02_files/figure-html/unnamed-chunk-5-1.png" alt="Charakterystyka  zbioru danych - DWelch" width="864" />
+<p class="caption">
+Charakterystyka zbioru danych - DWelch
+</p>
+</div>
+<pre class="r"><code>oneway.test(y~ g, data= DWelch)</code></pre>
+<pre><code>## 
+##  One-way analysis of means (not assuming equal variances)
+## 
+## data:  y and g
+## F = 8.1928, num df = 2.000, denom df = 33.434, p-value = 0.001272</code></pre>
+</div>
+<div id="testy-post-hoc" class="section level3">
+<h3>Testy post hoc</h3>
+<p>Po odrzuceniu hipotezy zerowej dla przypadku heteroskedastyczności można wykonać serię testów Welcha z poprawką na porównania wielokrotne np. Hochberga. Ta metoda jest zaimplementowana w funkcji <a href="https://www.rdocumentation.org/packages/stats/versions/3.5.0/topics/pairwise.t.test"><code>pairwise.t.test</code></a> w której trzeba dodać opcję <code>pool.sd= F</code> ponieważ domyślnie są wykonywane klasyczne testy t-Studenta.</p>
+<pre class="r"><code>pairwise.t.test(DWelch$y, DWelch$g, pool.sd= F, p.adjust.method= &quot;hochberg&quot;)</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using t tests with non-pooled SD 
+## 
+## data:  DWelch$y and DWelch$g 
+## 
+##   A     B    
+## B 0.004 -    
+## C 0.027 0.870
+## 
+## P value adjustment method: hochberg</code></pre>
+</div>
+<div id="uwagi-koncowe" class="section level3">
+<h3>Uwagi końcowe</h3>
+<ol style="list-style-type: decimal">
+<li>W pakiecie <strong>onewaytests</strong> <span class="citation">(Dag, Dolgun, and Konar <a href="#ref-oneway2018">2018</a>)</span> są dostępne także inne metody dla jednoczynnikowej analizy wariancji w warunkach heteroskedastyczności. Za przykład niech posłuży test Browna-Forsythe.</li>
+</ol>
+<pre class="r"><code>onewaytests::bf.test(y~ g, data= DWelch)</code></pre>
+<pre><code>## 
+##   Brown-Forsythe Test 
+## --------------------------------------------------------- 
+##   data : y and g 
+## 
+##   statistic  : 5.089532 
+##   num df     : 2 
+##   denom df   : 42.91744 
+##   p.value    : 0.01038783 
+## 
+##   Result     : Difference is statistically significant. 
+## ---------------------------------------------------------</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>W pakiecie <strong>doex</strong> <span class="citation">(Mustafa Cavus, Yazici, and Sezer <a href="#ref-aovHeter">2018</a>)</span> można znaleźć dużo większy zestaw rozwiązań niż w bibliotece przedstawionej powyżej. Warto zwrócić szczególną uwagę na rozwiązania które są oparte na symulacji monte carlo np. zmodyfikowana wersja uogólnionego testu F z wykorzystaniem M-estymatorów (Huber`s) <span class="citation">(M. Cavus, Yazici, and Sezer <a href="#ref-aovRob2017">2017</a>)</span>. Wszystkie metody z tego pakietu są przeznaczone tylko dla jednoczynnikowej analizy wariancji. Poniżej przykład zmodyfikowanej metody Browna-Forsythe.</li>
+</ol>
+<pre class="r"><code>with(doex::MBF(y,g), data= DWelch)</code></pre>
+<pre><code>## $p.value
+## [1] 0.01372304</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>W pakiecie <strong>PMCMRplus</strong> <span class="citation">(Pohlert <a href="#ref-pmcmr2018">2018</a>)</span> zostało zaimplementowanych wiele testów post hoc które są odporne na heteroskedastyczność. Przykładowo, zamiast serii testów Welcha można wykorzystać np. metodę Gamesa-Howella.</li>
+</ol>
+<pre class="r"><code>summary(PMCMRplus::gamesHowellTest(y~ g, data= DWelch))</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using Games-Howell test</code></pre>
+<pre><code>## P value adjustment method: none</code></pre>
+<pre><code>##            q value Pr(&gt;|q|)   
+## B - A == 0   5.009 0.003738 **
+## C - A == 0   3.765 0.034266  *
+## C - B == 0  -0.233 0.985159</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Korektę na heteroskedastyczność wariancji (np. kanapkowy estymator wriancji z biblioteki <strong>sandwich</strong>) dla testów post hoc można wykonać z wykorzystaniem pakietu <strong>multcomp</strong> <span class="citation">(Herberich, Sikorski, and Hothorn <a href="#ref-multcomp2010">2010</a>)</span>.</li>
+</ol>
+<pre class="r"><code>postHoc &lt;- multcomp::glht(lm(y~g, data= DWelch), multcomp::mcp(g=&quot;Tukey&quot;),
+                          vcov= sandwich::sandwich)
+summary(postHoc, test= multcomp::Chisqtest())</code></pre>
+<pre><code>## 
+##   General Linear Hypotheses
+## 
+## Multiple Comparisons of Means: Tukey Contrasts
+## 
+## 
+## Linear Hypotheses:
+##            Estimate
+## B - A == 0   1.5081
+## C - A == 0   1.4069
+## C - B == 0  -0.1012
+## 
+## Global Test:
+##   Chisq DF Pr(&gt;Chisq)
+## 1 17.59  2  0.0001513</code></pre>
+<pre class="r"><code>set.seed(2305); summary(postHoc)</code></pre>
+<pre><code>## 
+##   Simultaneous Tests for General Linear Hypotheses
+## 
+## Multiple Comparisons of Means: Tukey Contrasts
+## 
+## 
+## Fit: lm(formula = y ~ g, data = DWelch)
+## 
+## Linear Hypotheses:
+##            Estimate Std. Error t value Pr(&gt;|t|)   
+## B - A == 0   1.5081     0.4150   3.634  0.00168 **
+## C - A == 0   1.4069     0.5151   2.731  0.02157 * 
+## C - B == 0  -0.1012     0.5986  -0.169  0.98401   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## (Adjusted p values reported -- single-step method)</code></pre>
+</div>
+</div>
+<div id="zmienne-zalezne" class="section level2">
+<h2>Zmienne zależne</h2>
+<div id="test-t-studenta" class="section level3">
+<h3>Test t-Studenta</h3>
+<p>Test t-Studenta przeprowadzamy także dla dwóch sparowanych zmiennych gdy spełnione jest założenie normalności rozkładu. Ta metoda sprowadza się do wykonania testu t-Studenta dla jednej zmiennej ponieważ badamy wartości obiczone na podstawie różnic z dwóch zmiennych.</p>
+<pre class="r"><code>set.seed(2305)
+dpaired &lt;- data.frame(y= c(rnorm(25,2,1),rnorm(25,2,1.5)),
+                      g= factor(rep(LETTERS[1:2],c(25,25))), b= factor(rep(1:25,2)))</code></pre>
+<pre class="r"><code>t.test(y~ g, data= dpaired, paired= T)</code></pre>
+<pre><code>## 
+##  Paired t-test
+## 
+## data:  y by g
+## t = 1.3568, df = 24, p-value = 0.1875
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -0.2184944  1.0569295
+## sample estimates:
+## mean of the differences 
+##               0.4192175</code></pre>
+</div>
+<div id="rm-anova-huynh-feldt" class="section level3">
+<h3>RM ANOVA / Huynh-Feldt</h3>
+<p>Klasyczna ANOVA dla powtarzanych pomiarów (ang. repeated measures ANOVA) jest uogólnieniem testu t-Studenta dla dwóch zmiennych zależnych. Metoda ta wymaga spełnienia dwóch założeń: normalność i sferyczność (słabsza forma symetrii złożonej) którą można zweryfikować za pomocą testu Mauchly. W przypadku gdy założenie o sferyczności nie jest spełnione należy wziąść pod uwagę jedną z dwóch poprawek Greenhouse-Geisser lub Huynha-Feldta ewentualnie zastosować test MANOVA <span class="citation">(O’brien and Kaiser <a href="#ref-Obrien1985">1985</a>)</span>.</p>
+<pre class="r"><code>set.seed(4101)
+Dpaired &lt;- data.frame(y=c(rnorm(20,0,1),rnorm(20,1.5,3),rnorm(20,1.5,2)),
+                      g=factor(rep(LETTERS[1:3],each=20)),
+                      b=factor(rep(letters[1:20],3)))</code></pre>
+<pre class="r"><code>mauchly.test(lm(matrix(Dpaired[,1],20,3)~1), X= ~1)$p.value</code></pre>
+<pre><code>## [1] 0.004586016</code></pre>
+<pre class="r"><code>anova(lm(matrix(Dpaired[,1],20,3)~1), X= ~1, test= &quot;Spherical&quot;)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## 
+## Contrasts orthogonal to
+## ~1
+## 
+## Greenhouse-Geisser epsilon: 0.6895
+## Huynh-Feldt epsilon:        0.7259
+## 
+##             Df      F num Df den Df    Pr(&gt;F)   G-G Pr   H-F Pr
+## (Intercept)  1 6.2572      2     38 0.0044773 0.011883 0.010592
+## Residuals   19</code></pre>
+<pre class="r"><code>anova(lm(matrix(Dpaired[,1],20,3)~1), X= ~1, test= &quot;Wilks&quot;)</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## 
+## Contrasts orthogonal to
+## ~1
+## 
+##             Df   Wilks approx F num Df den Df    Pr(&gt;F)    
+## (Intercept)  1 0.44839   11.072      2     18 0.0007326 ***
+## Residuals   19                                             
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+<div id="testy-post-hoc-1" class="section level3">
+<h3>Testy post hoc</h3>
+<p>Oczywiście (podobnie jak w przypadku ANOVA dla zmiennych niezależnych) jest możliwość przeprowadzenia serii testów t-Studenta dla zmiennych zależnych.</p>
+<pre class="r"><code>with(data= Dpaired, pairwise.t.test(y, g, p.adj= &quot;hochberg&quot;, paired= T))</code></pre>
+<pre><code>## 
+##  Pairwise comparisons using paired t tests 
+## 
+## data:  y and g 
+## 
+##   A      B     
+## B 0.0094 -     
+## C 0.0036 0.3148
+## 
+## P value adjustment method: hochberg</code></pre>
+</div>
+<div id="uwagi-koncowe-1" class="section level3">
+<h3>Uwagi końcowe</h3>
+<ol style="list-style-type: decimal">
+<li>Zamiast klasycznego modelu RM ANOVA (także z wybraną korektą) lub MANOVA coraz częściej są proponowane liniowe modele mieszane <span class="citation">(Zieliński <a href="#ref-ziel2010">2010</a>)</span>.</li>
+</ol>
+<pre class="r"><code>sol &lt;- nlme::lme(y~ g, data= Dpaired, random= ~1|b, corr=nlme::corCompSymm(form=~1|b))
+anova(sol)</code></pre>
+<pre><code>##             numDF denDF  F-value p-value
+## (Intercept)     1    38 43.97920  &lt;.0001
+## g               2    38  6.25715  0.0045</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>W modelach mieszanych można modelować strukturę wariancji-kowariancji (symetria złożona, niestrukturalna) i uwzględniać heterogeniczność wariancji.</li>
+</ol>
+<pre class="r"><code>res &lt;- nlme::lme(y~ g, data= Dpaired, random= ~1|b, corr=nlme::corSymm(form=~1|b),
+                 weights= nlme::varIdent(form= ~1|g))
+anova(res)</code></pre>
+<pre><code>##             numDF denDF  F-value p-value
+## (Intercept)     1    38 22.35743  &lt;.0001
+## g               2    38 11.68700   1e-04</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>W oparciu o test ilorazu wiarygodności (także kryterium wartości AIC i BIC) możemy określić który z rozważanych modeli będzie lepszy.</li>
+</ol>
+<pre class="r"><code>anova(sol,res)</code></pre>
+<pre><code>##     Model df      AIC      BIC    logLik   Test  L.Ratio p-value
+## sol     1  6 260.8105 273.0688 -124.4053                        
+## res     2 10 242.8844 263.3150 -111.4422 1 vs 2 25.92609  &lt;.0001</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Po wyborze odpowiedniego modelu, można wykonać dalszą analizę za pomocą funkcji z pakietu <strong>multcomp</strong>.</li>
+</ol>
+<pre class="r"><code>ph &lt;- multcomp::glht(res, linfct= multcomp::mcp(g= &quot;Tukey&quot;))
+summary(ph, test= multcomp::Chisqtest())</code></pre>
+<pre><code>## 
+##   General Linear Hypotheses
+## 
+## Multiple Comparisons of Means: Tukey Contrasts
+## 
+## 
+## Linear Hypotheses:
+##            Estimate
+## B - A == 0   2.5196
+## C - A == 0   1.6182
+## C - B == 0  -0.9014
+## 
+## Global Test:
+##   Chisq DF Pr(&gt;Chisq)
+## 1 23.37  2  8.402e-06</code></pre>
+<pre class="r"><code>summary(ph)</code></pre>
+<pre><code>## 
+##   Simultaneous Tests for General Linear Hypotheses
+## 
+## Multiple Comparisons of Means: Tukey Contrasts
+## 
+## 
+## Fit: lme.formula(fixed = y ~ g, data = Dpaired, random = ~1 | b, correlation = nlme::corSymm(form = ~1 | 
+##     b), weights = nlme::varIdent(form = ~1 | g))
+## 
+## Linear Hypotheses:
+##            Estimate Std. Error z value Pr(&gt;|z|)    
+## B - A == 0   2.5196     0.7871   3.201  0.00342 ** 
+## C - A == 0   1.6182     0.4257   3.801  &lt; 0.001 ***
+## C - B == 0  -0.9014     0.8730  -1.033  0.54032    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## (Adjusted p values reported -- single-step method)</code></pre>
+</div>
+</div>
+<div id="co-dalej" class="section level2">
+<h2>Co dalej</h2>
+<p>W przypadku gdy chcemy porównać różnice średnich (lub ilorazy) a dane pochodzą z rozkładu normalnego (nie koniecznie o równych wariancjach w grupach) to możemy skorzystać z pakietu <strong>SimComp</strong> <span class="citation">(Hasler <a href="#ref-simcomp2014">2014</a>)</span>. To rozwiązanie może być dobrym uzupełnieniem wyników dla jednoczynnikowej analizy wariancji ANOVA lub MANOVA. Inne rozwiązanie <span class="citation">(Friedrich, Konietschke, and Pauly <a href="#ref-GFD2017">2017</a>)</span> nie wymaga spełnienia żadnych założeń tzn. normalności oraz homoskedastyczności i zostało udostępnione w pakiecie <strong>GFD</strong>. Dodatkowo modele ANOVA-type-statistic oraz Wald-type-statistic (także w wersji permutacyjnej) umożliwiają analizę bardziej rozbudowanych modeli badawczych. Inaczej mówiąc, możemy badać modele jedno lub wieloczynnikowe (jedna lub wiele zmiennych grupujących) z interakcjami. Gdy występują obserwacje odstające (mają one wpływ na normalność rozkładu i jednorodność wariancji) to zamiast estymatora średniej można wykorzystać odporne estymatory: średnią uciętą i wariancję winsorowską. Metoda która wykorzystuje wyżej wymienione estymatory to test Yuena <span class="citation">(Wei‐Ming and Jiin‐Huarng <a href="#ref-yuen2007">2007</a>)</span> który dla parametru ucięcia równego zero uprości się do testu Welcha. Z kolei uogólniona metoda Welcha-Jamesa <span class="citation">(Johansen <a href="#ref-wj1980">1980</a>)</span> rozwiązuje problem jedno lub wieloczynnikowej analizy wariancji w warunkach heteroskedastyczności. W pakiecie <strong>welchADF</strong> ta metoda została rozszerzona <span class="citation">(Villacorta <a href="#ref-welchADF">2017</a>)</span> o możliwość analizowania średniej uciętej w wersji bootstrap. Takie podejście znajdziemy także w pakiecie <strong>WRS</strong> ale nie jest on dostępny w repozytorium CRAN - proces jego instalacji można znaleźć pod adresem: <a href="https://dornsife.usc.edu/labs/rwilcox/software/">link</a>. Warto zwrócić uwagę także na bliźniaczy pakiet <strong>WRS2</strong> który jest zamieszczony w repozytorium CRAN ale udostępniono w nim tylko część funkcji z biblioteki <strong>WRS</strong>. Szerszy opis metod z obu bibliotek można znaleźć w <span class="citation">(Wilcox Rand <a href="#ref-wilcox2017">2017</a>)</span> oraz <span class="citation">(Mair, Schoenbrodt, and Wilcox <a href="#ref-wrs2">2017</a>)</span> odpowiednio dla pakietu <strong>WRS</strong> i <strong>WRS2</strong>. Dodajmy, że do funkcji z pakietu <strong>WRS</strong> należy wprowadzać dane tylko w formie listy tzn. nie deklarujemy modelu za pomocą formuły. Aby ułatwić to zadanie udostępniono funkcję <code>fac2list</code> za pomocą której można przekształcić ramkę danych w listę.</p>
+<pre class="r"><code>DWelch2 &lt;- WRS::fac2list(DWelch[,1],DWelch[,2])</code></pre>
+<pre><code>## [1] &quot;Group Levels:&quot;
+## [1] 1 2 3</code></pre>
+<pre class="r"><code>WRS::t1way(DWelch2, tr= 0.2)</code></pre>
+<pre><code>## $TEST
+## [1] 5.094018
+## 
+## $nu1
+## [1] 2
+## 
+## $nu2
+## [1] 19.13307
+## 
+## $n
+## [1] 20 20 20
+## 
+## $p.value
+## [1] 0.01684246</code></pre>
+<pre class="r"><code>WRS::lincon(DWelch2, tr= 0.2)[&quot;psihat&quot;]</code></pre>
+<pre><code>## [1] &quot;Note: confidence intervals are adjusted to control FWE&quot;
+## [1] &quot;But p-values are not adjusted to control FWE&quot;
+## [1] &quot;Adjusted p-values can be computed with the R function p.adjust&quot;</code></pre>
+<pre><code>## $psihat
+##      Group Group     psihat  ci.lower     ci.upper    p.value
+## [1,]     1     2 -1.2054198 -2.606374  0.195534328 0.03661025
+## [2,]     1     3 -1.4752421 -2.942522 -0.007962657 0.01700286
+## [3,]     2     3 -0.2698223 -2.051444  1.511799575 0.70041415</code></pre>
+<pre class="r"><code>Dpaired2 &lt;- WRS::fac2list(Dpaired[,1],Dpaired[,2])</code></pre>
+<pre><code>## [1] &quot;Group Levels:&quot;
+## [1] 1 2 3</code></pre>
+<pre class="r"><code>WRS::rmanova(Dpaired2, tr= 0.2)[c(&quot;test&quot;,&quot;p.value&quot;,&quot;tmeans&quot;)]</code></pre>
+<pre><code>## [1] &quot;The number of groups to be compared is&quot;
+## [1] 3</code></pre>
+<pre><code>## $test
+## [1] 6.928921
+## 
+## $p.value
+## [1] 0.01060998
+## 
+## $tmeans
+## [1] -0.2320688  2.8110129  1.4989547</code></pre>
+<pre class="r"><code>WRS::rmmcp(Dpaired2, tr= 0.2)[c(&quot;test&quot;,&quot;psihat&quot;)]</code></pre>
+<pre><code>## $test
+##      Group Group      test     p.value     p.crit        se
+## [1,]     1     2 -3.634137 0.003928132 0.01666667 0.8098148
+## [2,]     1     3 -2.569170 0.026088923 0.02500000 0.5176823
+## [3,]     2     3  1.303466 0.219036792 0.05000000 0.7926066
+## 
+## $psihat
+##      Group Group    psihat  ci.lower   ci.upper
+## [1,]     1     2 -2.942978 -5.226683 -0.6592728
+## [2,]     1     3 -1.330014 -2.789896  0.1298675
+## [3,]     2     3  1.033136 -1.202041  3.2683134</code></pre>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-aovRob2017">
+<p>Cavus, M., B. Yazici, and A. Sezer. 2017. “Modifed Tests for Comparison of Group Means Under Heteroskedasticity and Non-Normality Caused by Outlier(s).” <em>Hacettepe Journal of Mathematics and Statistics</em> 46 (3): 501–18. <a href="http://www.hjms.hacettepe.edu.tr/uploads/f0746d40-4b55-41fb-9917-12f8f2f0a2e4.pdf" class="uri">http://www.hjms.hacettepe.edu.tr/uploads/f0746d40-4b55-41fb-9917-12f8f2f0a2e4.pdf</a>.</p>
+</div>
+<div id="ref-aovHeter">
+<p>Cavus, Mustafa, Berna Yazici, and Ahmet Sezer. 2018. <em>Doex: One-Way Heteroscedastic Anova Tests</em>. <a href="https://CRAN.R-project.org/package=doex" class="uri">https://CRAN.R-project.org/package=doex</a>.</p>
+</div>
+<div id="ref-oneway2018">
+<p>Dag, O., A. Dolgun, and N.M. Konar. 2018. “Onewaytests: An R Package for One-Way Tests in Independent Groups Designs.” <em>The R Journal</em>. <a href="https://journal.r-project.org/archive/2018/RJ-2018-022/" class="uri">https://journal.r-project.org/archive/2018/RJ-2018-022/</a>.</p>
+</div>
+<div id="ref-welch2016">
+<p>Derrick, B., and P. White. 2016. “Why Welch’s Test Is Type I Error Robust.” <em>The Quantitative Methods for Psychology</em> 12 (1). TQMP: 30–38. <a href="https://www.tqmp.org/RegularArticles/vol12-1/p030/ ">https://www.tqmp.org/RegularArticles/vol12-1/p030/</a>.</p>
+</div>
+<div id="ref-GFD2017">
+<p>Friedrich, Sarah, Frank Konietschke, and Markus Pauly. 2017. “GFD: An R Package for the Analysis of General Factorial Designs.” <em>Journal of Statistical Software, Code Snippets</em> 79 (1): 1–18. <a href="https://doi.org/10.18637/jss.v079.c01" class="uri">https://doi.org/10.18637/jss.v079.c01</a>.</p>
+</div>
+<div id="ref-simcomp2014">
+<p>Hasler, M. 2014. “Multiple Contrast Tests for Multiple Endpoints in the Presence of Heteroscedasticity.” <em>The International Journal of Biostatistics</em> 10 (1). TQMP: 17–28. <a href="https://doi.org/10.1515/ijb-2012-0015" class="uri">https://doi.org/10.1515/ijb-2012-0015</a>.</p>
+</div>
+<div id="ref-multcomp2010">
+<p>Herberich, Esther, Johannes Sikorski, and Torsten Hothorn. 2010. “A Robust Procedure for Comparing Multiple Means Under Heteroscedasticity in Unbalanced Designs.” <em>PLOS ONE</em> 5 (3). Public Library of Science: 1–8. <a href="https://doi.org/10.1371/journal.pone.0009788" class="uri">https://doi.org/10.1371/journal.pone.0009788</a>.</p>
+</div>
+<div id="ref-wj1980">
+<p>Johansen, Soren. 1980. “The Welch-James Approximation to the Distribution of the Residual Sum of Squares in a Weighted Linear Regression.” <em>Biometrika</em> 67 (1). [Oxford University Press, Biometrika Trust]: 85–92. <a href="http://doi.org/10.2307/2335320" class="uri">http://doi.org/10.2307/2335320</a>.</p>
+</div>
+<div id="ref-wrs2">
+<p>Mair, Patrick, Felix Schoenbrodt, and Rand Wilcox. 2017. <em>WRS2: Wilcox robust estimation and testing</em>. <a href="https://cran.r-project.org/web/packages/WRS2/index.html" class="uri">https://cran.r-project.org/web/packages/WRS2/index.html</a>.</p>
+</div>
+<div id="ref-Obrien1985">
+<p>O’brien, R. G., and M. Kent Kaiser. 1985. “MANOVA Method for Analyzing Repeated Measures Designs: An Extensive Primer.” <em>Psychological Bulletin</em> 97 2: 316–33. <a href="https://www.semanticscholar.org/paper/MANOVA-method-for-analyzing-repeated-measures-an-O&#39;brien-Kaiser/589e9049758cd50b8fde4ceb8842e8b3f3778c6e?tab=abstract" class="uri">https://www.semanticscholar.org/paper/MANOVA-method-for-analyzing-repeated-measures-an-O'brien-Kaiser/589e9049758cd50b8fde4ceb8842e8b3f3778c6e?tab=abstract</a>.</p>
+</div>
+<div id="ref-pmcmr2018">
+<p>Pohlert, Thorsten. 2018. <em>PMCMRplus: Calculate Pairwise Multiple Comparisons of Mean Rank Sums Extended</em>. <a href="https://cran.r-project.org/web/packages/PMCMRplus/vignettes/QuickReferenceGuide.html" class="uri">https://cran.r-project.org/web/packages/PMCMRplus/vignettes/QuickReferenceGuide.html</a>.</p>
+</div>
+<div id="ref-welchADF">
+<p>Villacorta, Pablo J. 2017. “The welchADF Package for Robust Hypothesis Testing in Unbalanced Multivariate Mixed Models with Heteroscedastic and Non-normal Data.” <em>The R Journal</em> 9 (2): 309–28. <a href="https://journal.r-project.org/archive/2017/RJ-2017-049/index.html" class="uri">https://journal.r-project.org/archive/2017/RJ-2017-049/index.html</a>.</p>
+</div>
+<div id="ref-yuen2007">
+<p>Wei‐Ming, Luh, and Guo Jiin‐Huarng. 2007. “Approximate Sample Size Formulas for the Two‐sample Trimmed Mean Test with Unequal Variances.” <em>British Journal of Mathematical and Statistical Psychology</em> 60 (1): 137–46. <a href="https://doi.org/10.1348/000711006X100491" class="uri">https://doi.org/10.1348/000711006X100491</a>.</p>
+</div>
+<div id="ref-wilcox2017">
+<p>Wilcox Rand. 2017. <em>Introduction to Robust Estimation and Hypothesis Testing 4th Edition</em>. Elsevier. <a href="https://www.elsevier.com/books/introduction-to-robust-estimation-and-hypothesis-testing/wilcox/978-0-12-804733-0" class="uri">https://www.elsevier.com/books/introduction-to-robust-estimation-and-hypothesis-testing/wilcox/978-0-12-804733-0</a>.</p>
+</div>
+<div id="ref-ziel2010">
+<p>Zieliński, P. 2010. “Multilevel Analysis for Repeated Measures - Hierarchical Linear Model as an Alternative to the Analysis of Variance.” <em>Psychologia Społeczna</em> 5 (14, 2-3). Wydawnictwo Naukowe SCHOLAR: 234–59. <a href=" http://spbulletin.com/articles/zielinski-p-2010-multilevel-analysis-for-repeated-measures-hierarchical-linear-model-as-an-alternative-to-the-analysis-of-variance/">http://spbulletin.com/articles/zielinski-p-2010-multilevel-analysis-for-repeated-measures-hierarchical-linear-model-as-an-alternative-to-the-analysis-of-variance/</a>.</p>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
