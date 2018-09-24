@@ -1,2 +1,2 @@
 # StatsTestR
-strona
+https://krzysiektr.github.io/StatsTestR/
